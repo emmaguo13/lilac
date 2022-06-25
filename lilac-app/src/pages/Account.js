@@ -80,7 +80,11 @@ function Form() {
                 <h3>{walletAddr}</h3>
 
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>GitHub Username</div>
-                <h3>{githubUsername}</h3>
+                <Input
+                  style={{ borderRadius: '1vw', size: 'small' }}
+                  onChange={(event) => setGithubUsername(event.target.value)}
+                  defaultValue={githubUsername}
+                />
 
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>Reputation Score</div>
                 <h2>{reputationScore}/100</h2>
