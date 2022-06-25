@@ -6,15 +6,15 @@ require('dotenv').config();
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    const { address, ens } = req.query;
+// Fetch User Data 
+router.get('/getUserData', async (req, res) => {
+    const { address } = req.query;
 
-    if (!address && !ens) {
+    if (!address) {
         return res.status(400).json({
-            address: 'Address / ENS not found',
+            address: 'Address',
         });
     }
-
     let user = {};
     try {
         user = await User.findOne({ address });
@@ -22,40 +22,30 @@ router.get('/', async (req, res) => {
         console.log(e);
         return res.status(500).send(e);
     }
-
     return res.status(200).json({ success: true, user });
 });
 
-router.post('/createUser', async (req, res) => {
-    const { name, ens, address, github, twitter } = req.body;
-
-    if (!name) {
-        return res.status(400).json({
-            name: 'Name not found',
-        });
-    } else if (!address) {
-        return res.status(400).json({
-            address: 'School not found',
-        });
-    } else if (!github) {
-        return res.status(400).json({
-            github: 'Github not found',
-        });
-    } else if (!twitter) {
-        return res.status(400).json({
-            twitter: 'Twitter not found',
-        });
-    }
-
+router.put('/saveUserData', async (req, res) => {
+    const { address, name, ens, github, twitter } = req.body;
+    let user = [];
     try {
-        let newUser = new User({ name, ens, address, github, twitter });
-        await newUser.save();
+        user = await User.findOne({ address });
+        if (!user) {
+            // no user found, create new user
+            user = new User({ address, name, ens, github, twitter });
+        } else {
+            // update old db index
+            user.name = name;
+            user.ens = ens;
+            user.github = github;
+            user.twitter = twitter;
+        }
+        await user.save();
     } catch (e) {
         console.log(e);
-        return res.status(500).send(e);
+        return res.status(500).json({ success: false, error: e });
     }
-
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, newUserInfo: user });
 });
 
 // Go update the compound user thing beforehand
@@ -87,6 +77,30 @@ router.post('/updateCompoundCredit', async (req, res) => {
         console.log(e);
         return res.status(500).send(e);
     }
+});
+
+
+// Save user data
+router.put('/saveUserData', async (req, res) => {
+    const { address, name } = req.body;
+
+    let user = [];
+    try {
+        user = await User.findOne({ address });
+        if (!user) {
+            // no user found
+            // create new user
+            user = new User({ address, name });
+        } else {
+            // update old db index
+            user.name = name
+        }
+        await user.save();
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({ success: false, error: e });
+    }
+    return res.status(200).json({ success: true, newUserInfo: user });
 });
 
 module.exports = router;
