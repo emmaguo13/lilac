@@ -4,7 +4,7 @@ import UserStatus from './pages/UserStatus.js';
 import Home from './pages/Home.js';
 import LoginController from './pages/LoginController.js';
 import Register from './pages/Register.js';
-import Form from './pages/Form.js';
+import Form from './pages/Account.js';
 import NavBar from './components/NavBar.js';
 
 import './App.less';

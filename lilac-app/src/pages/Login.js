@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import axios from 'axios';
 import Register from './Register.js'
 import LoginBack from '../components/LoginBack.js'
-import Form from './Form.js'
+import Form from './Account.js'
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 
@@ -39,6 +39,8 @@ function Login(props) {
 	function handleLoggedIn(auth) {
 		console.log("handleLoggedIn")
 		setAuthState({auth});
+        console.log("handleGoToReg");
+        setGoToReg({goToReg});
 	};
 
     function handleAuthenticate(publicAddress, signature) {
@@ -84,15 +86,15 @@ function Login(props) {
         console.log(publicAddress);
         setLoading(true);
         console.log(process.env.REACT_APP_SERVER_URL)
-                // window.alert('Typing pattern matched.')
-                    try {
-                        //console.log(onLoggedIn)
-                        await handleLoggedIn(authState)
-                        
-                    } catch (err) {
-                        await setLoading(false)
-                        console.log(err)
-                    }
+        // window.alert('Typing pattern matched.')
+        try {
+            //console.log(onLoggedIn)
+            await handleLoggedIn(authState)
+            
+        } catch (err) {
+            await setLoading(false)
+            console.log(err)
+        }
     }
 
     async function handleWCLogin() {
