@@ -3,15 +3,6 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    ens: {
-        type: String,
-        trim: true,
-    },
     address: {
         type: String,
         required: true,
@@ -22,6 +13,16 @@ const userSchema = new mongoose.Schema({
             }
         },
     },
+    name: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    ens: {
+        type: String,
+        trim: true,
+    },
+
     github: {
         type: String,
         validate(value) {
