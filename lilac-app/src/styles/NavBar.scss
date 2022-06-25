@@ -1,0 +1,50 @@
+header {
+  display: flex;
+  justify-content: center;
+
+  nav {
+    height: 4rem;
+    width: 100%;
+    max-width: $page-width;
+    
+    display: flex;
+    align-items: stretch;
+
+    .nav-item--stretch {
+      flex: 1;
+    }
+
+    a {
+      font-size: 1rem;
+      color: $primary-800;
+
+      &.nav-item--active {
+        font-weight: 500;
+        color: $primary-900;
+      }
+
+      &:hover {
+        color: inherit;
+      }
+
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+    }
+
+    a.nav-item--primary, a.nav-item--primary.nax-item--active {
+      font-weight: 700;
+      color: $primary-900;
+      
+      svg {
+        margin-right: 8px;
+      }
+    }
+
+    > * + * {
+      margin-left: 1rem;
+    }
+  }
+
+
+}
