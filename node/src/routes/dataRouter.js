@@ -2,6 +2,9 @@ const express = require('express');
 const Update = require('../models/Update');
 const Data = require('../models/Data');
 const { request, gql } = require('graphql-request');
+const User = require('../models/User');
+const axios = require('axios');
+
 require('dotenv').config();
 
 const router = express.Router();
@@ -28,6 +31,70 @@ router.get('/', async (req, res) => {
     }
 
     return res.status(200).json({ success: true, documents });
+});
+
+router.post('/updateCompoundGitHub', async (req, res) => {
+    const { address } = req.body;
+
+    if (!address) {
+        return res.status(400).json({
+            address: 'Address not found',
+        });
+    }
+
+    date = new Date(1593124212);
+    try {
+        let lastFetch = await Update.findOne({ protocol: 'compound-github', address });
+        console.log(lastFetch);
+        if (lastFetch) {
+            date = new Date(lastFetch.time);
+            lastFetch.time = Date.now();
+        } else {
+            lastFetch = new Update({ protocol: 'compound-github', address, time: Date.now() });
+        }
+
+        let user = await User.findOne({ address });
+        if (!user) {
+            return res.status(400).json({
+                address: 'No user associated with address',
+            });
+        }
+
+        let index = user.github.indexOf('github');
+        let { data } = await axios.get(
+            `https://api.github.com/search/commits?q=+org:compound-finance+author:${user.github.substring(
+                index + 11
+            )}+author-date:>${date.getFullYear()}-${date.getMonth()}-${date.getDate()} `,
+            {
+                headers: {
+                    Accept: 'application/vnd.github.v3.text-match+json',
+                    'User-Agent': 'Lilac',
+                },
+                auth: {
+                    username: 'timg512372',
+                    password: process.env.GITHUB_TOKEN,
+                },
+            }
+        );
+
+        data.items.forEach(async (commit) => {
+            console.log(commit);
+            const datapoint = new Data({
+                type: 'commit',
+                time: new Date(commit.commit.author.date).getTime(),
+                magnitude: 1,
+                address,
+                protocol: 'compound',
+            });
+            await datapoint.save();
+        });
+
+        await lastFetch.save();
+    } catch (e) {
+        console.log(e);
+        return res.status(500).send(e);
+    }
+    return res.status(200).json({ success: true });
 });
 
 // For compound the date will be in terms of blocks
