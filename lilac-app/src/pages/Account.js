@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Tabs, Input, Upload, message } from 'antd';
+import { Button, Tabs, Input, Upload, message, Card, Col, Row } from 'antd';
 import Login from './Login.js';
 import WhiteBackground from '../components/WhiteBackground.js';
 import { navigate } from '@reach/router';
+
 
 import MapPicker from '../components/MapPicker';
 
@@ -11,11 +12,11 @@ const { TextArea } = Input;
 
 function Form() {
   const [deedName, setDeedName] = useState('');
-  const [granteeName, setGranteeName] = useState('');
+  const [name, setName] = useState('Test Name');
   const [address, setAddress] = useState('');
   const [granteePhone, setGranteePhone] = useState('');
   const [propertyDescription, setPropertyDescription] = useState('');
-  const [metamaskAddress, setMetamaskAddress] = useState('');
+  const [metamaskAddress, setMetamaskAddress] = useState('0x...');
   const [toLogin, setToLogin] = useState(false);
   const [points, setPoints] = useState([]);
   const [reputationScore, setReputationScore] = useState(50);
@@ -32,7 +33,7 @@ function Form() {
         <Login />
       ) : (
         <div className="form">
-          <div style={{ fontSize: '40px', marginBottom: '2vh', fontWeight: '700' }}>
+          <div style={{ fontSize: '40px', fontWeight: '700' }}>
             My Profile
           </div>
           <div className="contents-align">
@@ -64,15 +65,12 @@ function Form() {
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
                 <Input
                   style={{ borderRadius: '1vw', size: 'small' }}
-                  onChange={(event) => setDeedName(event.target.value)}
+                  onChange={(event) => setName(event.target.value)}
+                  defaultValue={name}
                 />
 
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>Wallet Address</div>
-                <Input
-                  style={{ borderRadius: '1vw', size: 'small' }}
-                  onChange={(event) => setGranteeName(event.target.value)}
-                  multiple
-                />
+                <h3>{metamaskAddress}</h3>
 
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>GitHub Username</div>
                 <h3>{githubUsername}</h3>
@@ -80,12 +78,7 @@ function Form() {
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>Reputation Score</div>
                 <h2>{reputationScore}/100</h2>
 
-              </div>
-            </div>
-          </div>
-          
-          <br />
-          <Button
+                <Button
             variant="primary"
             type="submit"
             onClick={handleSubmit}
@@ -93,6 +86,41 @@ function Form() {
           >
             SAVE
           </Button>
+
+
+              </div>
+            </div>
+          </div>
+          <div style={{ fontSize: '20px', marginBottom: '2vh', fontWeight: '700' }}>
+            Activity
+          </div>
+
+
+          <div className="site-card-wrapper">
+    <Row gutter={16}>
+      <Col span={8}>
+        <Card title="Propose" bordered={false}>
+          <p>Compound</p>
+          <p>Reputation Points: 10</p>
+        </Card>
+      </Col>
+      <Col span={8}>
+        <Card title="Vote" bordered={false}>
+        <p>dYdX</p>
+          <p>Reputation Points: 1</p>
+
+        </Card>
+      </Col>
+      <Col span={8}>
+        <Card title="Write Article" bordered={false}>
+        <p>TribeDAO</p>
+          <p>Reputation Points: 12</p>
+        </Card>
+      </Col>
+    </Row>
+  </div>
+    <br />
+
         </div>
       )}
     </>
