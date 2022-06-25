@@ -18,6 +18,8 @@ function Form() {
   const [metamaskAddress, setMetamaskAddress] = useState('');
   const [toLogin, setToLogin] = useState(false);
   const [points, setPoints] = useState([]);
+  const [reputationScore, setReputationScore] = useState(50);
+  const [githubUsername, setGithubUsername] = useState('@TestUsername');
 
   function handleSubmit() {
     console.log("beans")
@@ -59,47 +61,37 @@ function Form() {
                   marginTop: '20vh',
                 }}
               >
-                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Deed Name</div>
+                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
                 <Input
                   style={{ borderRadius: '1vw', size: 'small' }}
                   onChange={(event) => setDeedName(event.target.value)}
                 />
 
-                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Grantee Full name</div>
+                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Wallet Address</div>
                 <Input
                   style={{ borderRadius: '1vw', size: 'small' }}
                   onChange={(event) => setGranteeName(event.target.value)}
                   multiple
                 />
 
-                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Grantee Mailing Address</div>
-                <Input
-                  style={{ borderRadius: '1vw', size: 'small' }}
-                  onChange={(event) => setGranteePhone(event.target.value)}
-                />
+                <div style={{ fontSize: '15px', marginTop: '2vh' }}>GitHub Username</div>
+                <h3>{githubUsername}</h3>
 
-                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Metamask Address</div>
-                <Input
-                  style={{ borderRadius: '1vw', size: 'small' }}
-                  onChange={(event) => setAddress(event.target.value)}
-                />
+                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Reputation Score</div>
+                <h2>{reputationScore}/100</h2>
 
-                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Property Description</div>
-                <TextArea
-                  style={{ borderRadius: '1vw', size: 'small' }}
-                  onChange={(event) => setPropertyDescription(event.target.value)}
-                />
               </div>
             </div>
           </div>
-
+          
+          <br />
           <Button
             variant="primary"
             type="submit"
             onClick={handleSubmit}
             className="button button--secondary"
           >
-            APPLY
+            SAVE
           </Button>
         </div>
       )}
