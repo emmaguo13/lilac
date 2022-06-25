@@ -10,8 +10,10 @@ export default function Home() {
       <div className="jumbotron">
         <SplashGraphic />
         <aside>
-          <h1>Ensuring transparency in land ownership</h1>
-          <Link to="/register" className="button button--secondary">Register →</Link>
+          <h1>Transform your DAO governance with reputation</h1>
+          <h3>It's time to reward your most active members</h3>
+          <br />
+          <Link to="/login" className="button button--secondary">Get Started →</Link>
         </aside>
       </div>
     </Layout>

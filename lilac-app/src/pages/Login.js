@@ -193,12 +193,6 @@ function Login(props) {
                         Sign in with Metamask
                     </h1>
                     
-                        <div>
-                            <div style={{ fontSize: "15px", fontWeight:'500' }}>
-                            Type: I am logging in with Metamask
-                            </div>
-                        </div>
-                    
                     <Button
                     className="button button--secondary"
                         variant="primary"
