@@ -14,6 +14,8 @@ const { TextArea } = Input;
 function Form() {
   const {web3} = useContext(UserContext);
 
+  const walletAddr = web3[0].slice(0,4) + '...' + web3[0].slice(-4,-1);
+
   const [deedName, setDeedName] = useState('');
   const [name, setName] = useState('Test Name');
   const [address, setAddress] = useState('');
@@ -24,6 +26,8 @@ function Form() {
   const [points, setPoints] = useState([]);
   const [reputationScore, setReputationScore] = useState(50);
   const [githubUsername, setGithubUsername] = useState('@TestUsername');
+
+  console.log(walletAddr);
 
   function handleSubmit() {
     console.log("beans")
@@ -48,7 +52,7 @@ function Form() {
                   display: 'flex',
                   alignItems: 'center',
                   flexDirection: 'column',
-                  
+                  width: '50vw'
                 }}
               >
                 <WhiteBackground />
@@ -59,10 +63,10 @@ function Form() {
                   display: 'flex',
                   alignItems: 'center',
                   flexDirection: 'column',
-                  width: '30vw',
                   height: '100%',
                   padding: '0 5vw 0 5vw',
                   marginTop: '20vh',
+                  width: '30vw'
                 }}
               >
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
@@ -73,7 +77,7 @@ function Form() {
                 />
 
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>Wallet Address</div>
-                <h3>{web3}</h3>
+                <h3>{walletAddr}</h3>
 
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>GitHub Username</div>
                 <h3>{githubUsername}</h3>
