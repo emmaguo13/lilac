@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/User');
 const axios = require('axios');
+const Data = require('../models/Data');
 require('dotenv').config();
 
 const router = express.Router();
@@ -55,6 +56,37 @@ router.post('/createUser', async (req, res) => {
     }
 
     return res.status(200).json({ success: true });
+});
+
+// Go update the compound user thing beforehand
+router.post('/updateCompoundCredit', async (req, res) => {
+    const { address } = req.body;
+    // req.url = '/data/updateCompound';
+
+    try {
+        // await app._router.handle(req, res, next);
+
+        // let records = await Data.find({ address, protocol: 'compound' });
+
+        currentScore = 16;
+        // records.forEach((record) => {
+        //     if (record.type == 'proposal') {
+        //         currentScore += record.magnitude;
+        //     } else if (record.type == 'vote') {
+        //         currentScore += record.magnitude;
+        //     }
+        // });
+
+        adjusted_score = 1000 / (1 + Math.E ** (-0.1 * currentScore));
+
+        let user = await User.findOne({ address });
+        user.score = parseInt(adjusted_score);
+        await user.save();
+        return res.status(200).json({ success: true, score: parseInt(adjusted_score) });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).send(e);
+    }
 });
 
 module.exports = router;
