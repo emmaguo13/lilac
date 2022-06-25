@@ -1,4 +1,7 @@
 import { apolloClient } from './apollo-client';
+// this is showing you how you use it with react for example
+// if your using node or something else you can import using
+// @apollo/client/core!
 import { gql } from '@apollo/client'
 
 const GET_PUBLICATIONS = `
@@ -138,7 +141,7 @@ const GET_PUBLICATIONS = `
 
   fragment CollectModuleFields on CollectModule {
     __typename
-    ... on EmptyCollectModuleSettings {
+    ... on FreeCollectModuleSettings {
       type
     }
     ... on FeeCollectModuleSettings {

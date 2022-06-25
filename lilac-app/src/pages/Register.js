@@ -3,7 +3,12 @@ import { Button, Tabs, Input, Upload, message } from 'antd';
 import Login from './Login.js';
 import WhiteBackground from '../components/WhiteBackground.js';
 import { pollUntilIndexed } from '../tools/poll.js';
-import { createProfile } from '../tools/create-profile.js'
+import { createProfile } from '../tools/create-profile.js';
+import { useAtom } from 'jotai';
+import { accessTokenAtom } from '../utils/atom.js';
+import { setAuthenticationToken } from '../utils/state';
+import { generateChallenge, authenticate } from '../tools/auth.js';
+import Web3 from 'web3';
 
 //import { Auth } from '../types';
 
@@ -16,21 +21,45 @@ function Register() {
   const [publicAddress, setPublicAddress] = useState('');
   const [handle, setHandle] = useState('');
   const [toLogin, setToLogin] = useState(false);
+  const [accessToken] = useAtom(accessTokenAtom);
 
-  const createProfile = async () => {
+  const createLensProfile = async () => {
+    console.log("CREATING LENS PROFILE")
 
+    if (!web3) {
+      try {
+        await window.ethereum.enable();
+        web3 = new Web3(window.ethereum);
+      } catch (error) {
+        window.alert('You need to allow MetaMask.');
+        return;
+      }
+    }
+
+    const challengeResponse = await generateChallenge("0x2a8181c5249Be4729f883C232e395621132c8570");
+    const signature = await web3.eth.personal.sign(challengeResponse.data.challenge.text, "0x2a8181c5249Be4729f883C232e395621132c8570");
+    const accessTokens = await authenticate("0x2a8181c5249Be4729f883C232e395621132c8570", signature);
+    console.log(accessTokens);
+    setAuthenticationToken(accessTokens.data.authenticate.accessToken)
+
+    console.log(handle)
     const createProfileResult = await createProfile({
       handle: handle,
     });
+
+    console.log("PROFILE")
+    console.log(createProfileResult)
+
+    // STORE THE PROFILE NAME IN MONGO
   
-    console.log('create profile: poll until indexed');
-    const result = await pollUntilIndexed(createProfileResult.data.createProfile.txHash);
+    // console.log('create profile: poll until indexed');
+    // const result = await pollUntilIndexed(createProfileResult.data.createProfile.txHash);
   
-    console.log('create profile: profile has been indexed', result);
+    // console.log('create profile: profile has been indexed', result);
   
-    const logs = result.txReceipt.logs;
+    // const logs = result.txReceipt.logs;
   
-    console.log('create profile: logs', logs);
+    // console.log('create profile: logs', logs);
   
     // const topicId = utils.id(
     //   'ProfileCreated(uint256,address,address,string,string,address,bytes,string,uint256)'
@@ -47,25 +76,26 @@ function Register() {
   
     // console.log('profile id', BigNumber.from(profileId).toHexString());
   
-    console.log(result.data);
+    // console.log(result.data);
   };
   
 
   function handleSubmit() {
-    setToLogin(true);
+    console.log("handling submit")
     // Create a Lens Profile
-    createProfile();
+    createLensProfile();
 
     // Create an instance in our DB
-    fetch(process.env.REACT_APP_SERVER_URL + `/api/auth/users`, {
-      body: JSON.stringify({
-        publicAddress: publicAddress,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    }).then((response) => response.json());
+    // fetch(process.env.REACT_APP_SERVER_URL + `/api/auth/users`, {
+    //   body: JSON.stringify({
+    //     publicAddress: publicAddress,
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   method: "POST",
+    // }).then((response) => response.json());
+    setToLogin(true);
   }
 
   return (

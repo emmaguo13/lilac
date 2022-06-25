@@ -92,7 +92,7 @@ export const hasTxBeenIndexed = (txHash) => {
   })
 }
 
-const sleep = (milliseconds)=> {
+const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
 

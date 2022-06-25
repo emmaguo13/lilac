@@ -80,7 +80,6 @@ function Login(props) {
           //console.log(onLoggedIn)
           await handleLoggedIn(authState);
           //console.log(data.user[0])
-          await handleIsNotary(isNotary, data.user[0].role);
         } catch (err) {
           await setLoading(false);
           console.log(err);
