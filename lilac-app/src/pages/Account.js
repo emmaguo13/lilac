@@ -31,7 +31,7 @@ function Form() {
       ) : (
         <div className="form">
           <div style={{ fontSize: '40px', marginBottom: '2vh', fontWeight: '700' }}>
-            Create a Deed
+            My Profile
           </div>
           <div className="contents-align">
             <div className="form-display">
@@ -89,40 +89,6 @@ function Form() {
                   style={{ borderRadius: '1vw', size: 'small' }}
                   onChange={(event) => setPropertyDescription(event.target.value)}
                 />
-              </div>
-            </div>
-            <div
-              style={{
-                width: '45vw',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                padding: '',
-                marginTop: '3vh',
-                marginRight: '-10%',
-              }}
-            >
-              <div style={{ fontSize: '20px', marginBottom: '1vh' }}>
-                Plot the points of your deed below!
-              </div>
-              <div
-                style={{
-                  width: '40vw',
-                  height: '32vw',
-                }}
-              >
-                  <MapPicker points={points} setCoords={setPoints} />
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                {points.map((point) => {
-                  return (
-                    <div style={{ border: ' 2px solid black', margin: '1vw' }}>
-                      Latitude: {point.lat} <br />
-                      Longitude: {point.lng} <br />
-                    </div>
-                  );
-                })}
               </div>
             </div>
           </div>
