@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const userRouter = require('./routes/userRouter');
-// const schoolRouter = require("./routes/schoolRouter");
+const dataRouter = require('./routes/dataRouter');
 // const projectRouter = require("./routes/projectRouter");
 
 const port = process.env.PORT ? process.env.PORT : 4000;
@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/api/user/', userRouter);
-// app.use("/api/school/", schoolRouter);
+app.use('/api/data/', dataRouter);
 // app.use("/api/project/", projectRouter);
 
 app.listen(port, () => {

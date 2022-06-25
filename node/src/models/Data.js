@@ -6,7 +6,6 @@ const dataSchema = new mongoose.Schema({
     address: {
         type: String,
         required: true,
-        unique: true,
         validate(value) {
             if (!validator.isEthereumAddress(value)) {
                 throw new Error('Address is invalid');
@@ -14,9 +13,17 @@ const dataSchema = new mongoose.Schema({
         },
     },
     time: {
-        type: Date,
+        type: Number,
     },
     type: {
+        type: String,
+        required: true,
+    },
+    magnitude: {
+        type: Number,
+        required: true,
+    },
+    protocol: {
         type: String,
         required: true,
     },
