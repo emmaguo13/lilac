@@ -15,4 +15,4 @@ yarn-debug.log*
 yarn-error.log*
 
 .openzeppelin/.session
-BerifySMServerBeta.pem
+lilac.pem
