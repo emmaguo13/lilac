@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Link, Input } from 'antd';
 import Web3 from 'web3';
 import axios from 'axios';
@@ -6,14 +6,16 @@ import Register from './Register.js'
 import LoginBack from '../components/LoginBack.js'
 import Form from './Account.js'
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import UserContext from "../UserContext";
 
 
-let web3 = undefined; // Will hold the web3 instance
 // import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 
 
 function Login(props) {
+    const {web3, setWeb3} = useContext(UserContext);
+
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
     const [password, setPassword] = useState('');
@@ -62,21 +64,27 @@ function Login(props) {
             window.alert('Please install MetaMask first.');
             return;
         }
-
-        if (!web3) {
+        var web = undefined;
+        if (web3 === '') {
             try {
                 // Request account access if needed
                 await window.ethereum.enable();
 
                 // We don't know window.web3 version, so we use our own instance of Web3
                 // with the injected provider given by MetaMask
-                web3 = new Web3(window.ethereum);
+                web = new Web3(window.ethereum);
+                web.eth.getAccounts()
+               .then(async (addr) => {
+                   // Set User account into state
+                   setWeb3(addr);
+               });
             } catch (error) {
+                console.log(error)
                 window.alert('You need to allow MetaMask.');
                 return;
             }
         }
-        const coinbase = await web3.eth.getCoinbase();
+        const coinbase = await web.eth.getCoinbase();
         if (!coinbase) {
             window.alert('Please activate MetaMask first.');
             return;

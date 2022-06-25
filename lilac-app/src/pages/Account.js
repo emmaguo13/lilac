@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Button, Tabs, Input, Upload, message, Card, Col, Row } from 'antd';
 import Login from './Login.js';
 import WhiteBackground from '../components/WhiteBackground.js';
 import { navigate } from '@reach/router';
+import UserContext from "../UserContext";
 
 
 import MapPicker from '../components/MapPicker';
@@ -11,6 +12,8 @@ import MapPicker from '../components/MapPicker';
 const { TextArea } = Input;
 
 function Form() {
+  const {web3} = useContext(UserContext);
+
   const [deedName, setDeedName] = useState('');
   const [name, setName] = useState('Test Name');
   const [address, setAddress] = useState('');
@@ -70,7 +73,7 @@ function Form() {
                 />
 
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>Wallet Address</div>
-                <h3>{metamaskAddress}</h3>
+                <h3>{web3}</h3>
 
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>GitHub Username</div>
                 <h3>{githubUsername}</h3>

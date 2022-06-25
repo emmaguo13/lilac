@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState } from 'react';
 import { Router } from '@reach/router';
 import UserStatus from './pages/UserStatus.js';
 import Home from './pages/Home.js';
@@ -6,11 +6,20 @@ import LoginController from './pages/LoginController.js';
 import Register from './pages/Register.js';
 import Form from './pages/Account.js';
 import NavBar from './components/NavBar.js';
+import UserContext from "./UserContext";
+
 
 import './App.less';
 import './App.scss';
 
-const App = () => (
+function App() {
+  const [web3, setWeb3] = useState('')
+
+  return (
+    <UserContext.Provider value={{
+      web3,
+      setWeb3
+    }}>
   <div>
     <NavBar></NavBar>
     <Router>
@@ -21,6 +30,8 @@ const App = () => (
       <UserStatus path="user-status" />
     </Router>
   </div>
-);
+  </UserContext.Provider>
+  );
+}
 
 export default App;
