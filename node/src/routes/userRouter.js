@@ -56,16 +56,17 @@ router.post('/updateCompoundCredit', async (req, res) => {
     try {
         // await app._router.handle(req, res, next);
 
-        // let records = await Data.find({ address, protocol: 'compound' });
-
-        currentScore = 16;
-        // records.forEach((record) => {
-        //     if (record.type == 'proposal') {
-        //         currentScore += record.magnitude;
-        //     } else if (record.type == 'vote') {
-        //         currentScore += record.magnitude;
-        //     }
-        // });
+        let records = await Data.find({ address, protocol: 'compound' });
+        let currentScore = 0;
+        records.forEach((record) => {
+            if (record.type == 'proposal') {
+                currentScore += record.magnitude;
+            } else if (record.type == 'vote') {
+                currentScore += record.magnitude;
+            } else {
+                currentScore += record.magnitude * 10; // core devs should be rewarded for their commits
+            }
+        });
 
         adjusted_score = 1000 / (1 + Math.E ** (-0.1 * currentScore));
 
