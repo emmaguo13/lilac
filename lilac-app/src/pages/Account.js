@@ -7,6 +7,34 @@ import { navigate } from '@reach/router';
 
 import MapPicker from '../components/MapPicker';
 
+
+//imports that are breaking
+
+
+import SimpleBar from 'simplebar-react'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { ChakraProvider } from '@chakra-ui/react'
+import Cover from '../components/Cover'
+import Main from '../components/Main'
+
+// export default function App() {
+//   return (
+//     <SimpleBar style={{ maxHeight: '100vh' }}>
+//       <ChakraProvider>
+//         <Router>
+//           <Switch>
+//             <Route path="/" exact>
+//               <Cover />
+//               <Main />
+//             </Route>
+//           </Switch>
+//         </Router>
+//       </ChakraProvider>
+//     </SimpleBar>
+//   )
+// }
+
+
 const { TextArea } = Input;
 
 function Form() {
