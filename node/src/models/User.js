@@ -40,11 +40,6 @@ const userSchema = new mongoose.Schema({
     },
     score: {
         type: Number,
-        validate(value) {
-            if (!validator.isInt(value)) {
-                throw new Error('Credit score is invalid');
-            }
-        },
     },
 });
 

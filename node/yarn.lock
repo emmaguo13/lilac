@@ -1660,6 +1660,11 @@ keyv@^3.0.0:
   dependencies:
     json-buffer "3.0.0"
 
+lodash@:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+
 lowercase-keys@^1.0.0, lowercase-keys@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-1.0.1.tgz#6f9e30b47084d971a7c820ff15a6c5167b74c26f"
@@ -2224,6 +2229,13 @@ rlp@^2.2.4:
   integrity sha512-d5gdPmgQ0Z+AklL2NVXr/IoSjNZFfTVvQWzL/AM2AOcSzYP2xjlb0AC8YyCLc41MSNf6P6QVtjgPdmVtzb+4lQ==
   dependencies:
     bn.js "^5.2.0"
+
+run-middleware@^0.9.10:
+  version "0.9.10"
+  resolved "https://registry.yarnpkg.com/run-middleware/-/run-middleware-0.9.10.tgz#d90a06c6325974b881ddccf1629d3d368038b788"
+  integrity sha512-sDpMz9wE5edtmY9pvx4kXknkc2Owdqf9EnEGqAMKRIx09LvtaZ8dSo9AL9SXZnmcTWlc8icazy1HONOJdm6DAQ==
+  dependencies:
+    lodash ""
 
 safe-buffer@5.2.1, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@^5.2.0, safe-buffer@^5.2.1, safe-buffer@~5.2.0:
   version "5.2.1"
