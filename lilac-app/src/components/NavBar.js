@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from '@react/router';
+import { Link } from '@reach/router';
 
 const Icon = () => (
   <svg width="26" height="17" viewBox="0 0 92 82" fill="none" xmlns="http://www.w3.org/2000/svg">

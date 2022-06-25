@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { Polygon, Marker, Popup, useMapEvents } from 'react-leaflet';
 import { Button } from 'antd';
-import L from 'leaflet';
 
 import Icon from './Icon';
 
@@ -15,38 +13,13 @@ function MapPicker(props) {
         setExtra([...extra, { lat: 0, lng: 0 }]);
     };
 
-    const map = useMapEvents({
-        click(data) {
-            setPoints([...points, data.latlng]);
-        },
-    });
     console.log('rerender');
 
     return (
         <>
-            {points.length >= 3 ? <Polygon positions={points} /> : null}
             {points.map((point, index) => {
-                const icon = L.divIcon({
-                    className: 'custom-icon',
-                    html: ReactDOMServer.renderToString(<Icon perc={`#${index + 1}`} />),
-                });
 
                 return (
-                    <Marker
-                        key={index}
-                        position={point}
-                        icon={icon}
-                        draggable
-                        style={{ zIndex: 33 }}
-                        eventHandlers={{
-                            dragend: (data) => {
-                                let pointsCopy = points;
-                                pointsCopy[index] = data.target._latlng;
-                                setPoints(pointsCopy);
-                            },
-                        }}
-                    >
-                        <Popup>
                             <div
                                 style={{
                                     display: 'flex',
@@ -72,23 +45,12 @@ function MapPicker(props) {
                                     Remove
                                 </Button>
                             </div>
-                        </Popup>
-                    </Marker>
                 );
             })}
             {extra.map((point, index) => {
-                const icon = L.divIcon({
-                    className: 'custom-icon',
-                    html: ReactDOMServer.renderToString(<Icon perc={`#${index + 1}`} />),
-                });
 
                 return (
-                    <Marker
-                        style={{ zIndex: -3 }}
-                        key={index}
-                        position={point}
-                        icon={icon}
-                    ></Marker>
+                    <div></div>
                 );
             })}
         </>

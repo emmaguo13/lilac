@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Tabs, Input, Upload, message } from 'antd';
 import Login from './Login.js';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import WhiteBackground from '../components/WhiteBackground.js';
 import { navigate } from '@reach/router';
 
@@ -113,18 +112,7 @@ function Form() {
                   height: '32vw',
                 }}
               >
-                <MapContainer
-                  center={[51.505, -0.09]}
-                  zoom={17}
-                  scrollWheelZoom={false}
-                  style={{ width: '40vw', height: '30vw' }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
                   <MapPicker points={points} setCoords={setPoints} />
-                </MapContainer>
               </div>
               <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                 {points.map((point) => {

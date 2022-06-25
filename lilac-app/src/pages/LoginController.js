@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Login from './Login.js';
-import ApproveRequests from './notary/ApproveRequests.js'
 import Form from './Form.js'
 
 function LoginController(props) {
@@ -33,12 +32,7 @@ function LoginController(props) {
 			<> {
 				authState ? (
 					
-						isNotary ? (
-							<ApproveRequests />
-						) : (
-							<Form />
-						)
-					
+							<Form />					
 					
 				) : (
 					

@@ -4,7 +4,6 @@ import Web3 from 'web3';
 import axios from 'axios';
 import Register from './Register.js'
 import LoginBack from '../components/LoginBack.js'
-import ApproveRequests from './notary/ApproveRequests.js'
 import Form from './Form.js'
 
 let web3 = undefined; // Will hold the web3 instance
@@ -79,35 +78,19 @@ function Login(props) {
         console.log(publicAddress);
         setLoading(true);
         console.log(process.env.REACT_APP_SERVER_URL)
-        if (!data.user[0]) {
-            setGoToReg(true)
-        } else {
-            console.log("front end typing: " +JSON.stringify(verifyTyping.data))
-            const typingResult = verifyTyping.data
-            if (typingResult.result == 1) {
                 window.alert('Typing pattern matched.')
-                const message = await handleSignMessage(data.user[0].publicAddress, data.user[0].nonce)
-                if (message != null) {
-                    await handleAuthenticate(message.publicAddress, message.signature)
                     try {
                         //console.log(onLoggedIn)
                         await handleLoggedIn(authState)
-                        //console.log(data.user[0])
-                        await handleIsNotary(isNotary, data.user[0].role)
                         
                     } catch (err) {
                         await setLoading(false)
                         console.log(err)
                     }
-                } 
                 
-            } else {
-                window.alert('Typing pattern did not match.')
-            }
 
             
             
-        }
     }
 
     async function initialValidation() {
@@ -156,11 +139,7 @@ function Login(props) {
 
             authState ? (
 					
-                isNotary ? (
-                    <ApproveRequests />
-                ) : (
                     <Form />
-                )
             
             
         ) : (
@@ -218,7 +197,6 @@ function Login(props) {
                             <div style={{ fontSize: "15px", fontWeight:'500' }}>
                             Type: I am logging in with Metamask
                             </div>
-                            <Input onChange={(event) => typingPattern()} /> 
                         </div>
                     
                     <Button

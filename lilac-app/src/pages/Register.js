@@ -76,12 +76,10 @@ function Register() {
               <div style={{ fontSize: "15px", marginTop: "2vh" }}>
                 Full Name
               </div>
-              <Input style={{ borderRadius: '1vw' }} onChange={(event) => typingPattern(1, 'name', event.target.value)} />
 
               <div style={{ fontSize: "15px", marginTop: "2vh" }}>
                 Role
               </div>
-              <Input style={{ borderRadius: '1vw' }} onChange={(event) => typingPattern(2, 'role', event.target.value)} />
 
               <div style={{ fontSize: "15px", marginTop: "2vh" }}>
                 Metamask Address
@@ -91,7 +89,6 @@ function Register() {
               />
 
               <div style={{ fontSize: "15px", marginTop: "2vh" }}>Email</div>
-              <Input style={{ borderRadius: '1vw' }} onChange={(event) => typingPattern(3, 'email', event.target.value)} />
               
               <Button
                 variant="primary"
