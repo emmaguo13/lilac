@@ -5,9 +5,13 @@ import axios from 'axios';
 import Register from './Register.js'
 import LoginBack from '../components/LoginBack.js'
 import Form from './Form.js'
+import WalletConnectProvider from "@walletconnect/web3-provider";
+
 
 let web3 = undefined; // Will hold the web3 instance
 // import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+
+
 
 function Login(props) {
     const [name, setName] = useState('');
@@ -18,6 +22,7 @@ function Login(props) {
     const [typingPatt, setTypingPattern] = useState('')
     const [authState, setAuthState] = useState(false);
 	const [isNotary, setIsNotary] = useState(false);
+
 
 	useEffect (()  => {
 		setAuthState(false);
@@ -47,50 +52,12 @@ function Login(props) {
     async function handleLogin() {
 
         console.log('handling login');
-        // Check if MetaMask is installed
-        if (!window.ethereum) {
-            // what is window
-            console.log('checking for metamask');
-            window.alert('Please install MetaMask first.');
-            return;
-        }
-
-        if (!web3) {
-            try {
-                // Request account access if needed
-                await window.ethereum.enable();
-
-                // We don't know window.web3 version, so we use our own instance of Web3
-                // with the injected provider given by MetaMask
-                web3 = new Web3(window.ethereum);
-            } catch (error) {
-                window.alert('You need to allow MetaMask.');
-                return;
-            }
-        }
-        const coinbase = await web3.eth.getCoinbase();
-        if (!coinbase) {
-            window.alert('Please activate MetaMask first.');
-            return;
-        }
-
-        const publicAddress = coinbase.toLowerCase();
-        console.log(publicAddress);
-        setLoading(true);
-        console.log(process.env.REACT_APP_SERVER_URL)
-                window.alert('Typing pattern matched.')
-                    try {
-                        //console.log(onLoggedIn)
-                        await handleLoggedIn(authState)
-                        
-                    } catch (err) {
-                        await setLoading(false)
-                        console.log(err)
-                    }
-                
-
-            
-            
+        const provider = new WalletConnectProvider({
+            infuraId: "2d00259a58f9421fbba51c39bfa30d7c",
+          });
+        
+        await provider.enable();
+        return new Web3(provider);            
     }
 
     async function initialValidation() {
