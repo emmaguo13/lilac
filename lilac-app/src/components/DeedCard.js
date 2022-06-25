@@ -1,6 +1,4 @@
 import React from 'react';
-import { Button } from 'antd';
-import axios from 'axios';
 
 const DeedCard = (props) => {
   const { admin, deed, onClick, onConfirm, onDeny } = props;
@@ -23,7 +21,7 @@ const DeedCard = (props) => {
     >
       <div>{deed.deedId}</div>
       <div style={{ width: '15vw', textAlign: 'center' }}>{deed.name}</div>
-      <Button
+      <button
         type="link"
         onClick={() =>
           window.open(
@@ -33,22 +31,22 @@ const DeedCard = (props) => {
         }
       >
         Get PDF
-      </Button>
+      </button>
       {admin ? (
         <div>
-          <Button onClick={onConfirm} disabled={deed.status != 'P'}>
+          <button onClick={onConfirm} disabled={deed.status != 'P'}>
             {deed.status == 'P' ? 'Confirm' : 'Confirmed'}
-          </Button>
-          <Button onClick={onDeny} disabled={deed.status != 'P'}>
+          </button>
+          <button onClick={onDeny} disabled={deed.status != 'P'}>
             Deny
-          </Button>
+          </button>
         </div>
       ) : (
         <div style={{ width: '7vw', textAlign: 'center' }}>{statusWord[deed.status]}</div>
       )}
-      <Button type="link" onClick={onClick}>
+      <button type="link" onClick={onClick}>
         More Details
-      </Button>
+      </button>
     </div>
   );
 };

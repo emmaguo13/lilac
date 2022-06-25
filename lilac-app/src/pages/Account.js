@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Tabs, Input, Upload, message } from 'antd';
 import Login from './Login.js';
 import WhiteBackground from '../components/WhiteBackground.js';
 import { navigate } from '@reach/router';
 
-import MapPicker from '../components/MapPicker';
-
-
 //imports that are breaking
-
-
-import SimpleBar from 'simplebar-react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { ChakraProvider } from '@chakra-ui/react'
-import Cover from '../components/Cover'
-import Main from '../components/Main'
+import { ChakraProvider } from '@chakra-ui/react';
+import Cover from '../components/Cover';
+import Main from '../components/Main';
 
 // export default function App() {
 //   return (
@@ -34,9 +26,6 @@ import Main from '../components/Main'
 //   )
 // }
 
-
-const { TextArea } = Input;
-
 function Form() {
   const [deedName, setDeedName] = useState('');
   const [granteeName, setGranteeName] = useState('');
@@ -50,7 +39,7 @@ function Form() {
   const [githubUsername, setGithubUsername] = useState('@TestUsername');
 
   function handleSubmit() {
-    console.log("beans")
+    console.log('beans');
   }
 
   return (
@@ -60,9 +49,7 @@ function Form() {
         <Login />
       ) : (
         <div className="form">
-          <div style={{ fontSize: '40px', marginBottom: '2vh', fontWeight: '700' }}>
-            My Profile
-          </div>
+          <div style={{ fontSize: '40px', marginBottom: '2vh', fontWeight: '700' }}>My Profile</div>
           <div className="contents-align">
             <div className="form-display">
               <div
@@ -72,7 +59,6 @@ function Form() {
                   display: 'flex',
                   alignItems: 'center',
                   flexDirection: 'column',
-                  
                 }}
               >
                 <WhiteBackground />
@@ -90,13 +76,13 @@ function Form() {
                 }}
               >
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
-                <Input
+                <input
                   style={{ borderRadius: '1vw', size: 'small' }}
                   onChange={(event) => setDeedName(event.target.value)}
                 />
 
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>Wallet Address</div>
-                <Input
+                <input
                   style={{ borderRadius: '1vw', size: 'small' }}
                   onChange={(event) => setGranteeName(event.target.value)}
                   multiple
@@ -107,20 +93,19 @@ function Form() {
 
                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>Reputation Score</div>
                 <h2>{reputationScore}/100</h2>
-
               </div>
             </div>
           </div>
-          
+
           <br />
-          <Button
+          <button
             variant="primary"
             type="submit"
             onClick={handleSubmit}
             className="button button--secondary"
           >
             SAVE
-          </Button>
+          </button>
         </div>
       )}
     </>

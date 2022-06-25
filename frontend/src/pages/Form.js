@@ -6,8 +6,6 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import WhiteBackground from '../components/WhiteBackground.js';
 import { navigate } from '@reach/router';
 
-import MapPicker from '../components/MapPicker';
-
 const { TextArea } = Input;
 
 function Form() {
@@ -21,7 +19,7 @@ function Form() {
   const [points, setPoints] = useState([]);
 
   function handleSubmit() {
-    console.log("beans")
+    console.log('beans');
   }
 
   return (
@@ -43,7 +41,6 @@ function Form() {
                   display: 'flex',
                   alignItems: 'center',
                   flexDirection: 'column',
-                  
                 }}
               >
                 <WhiteBackground />

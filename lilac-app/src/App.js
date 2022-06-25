@@ -6,12 +6,10 @@ import LoginController from './pages/LoginController.js';
 import Register from './pages/Register.js';
 import Form from './pages/Account.js';
 import NavBar from './components/NavBar.js';
-
-import './App.less';
-import './App.scss';
+import { ChakraProvider } from '@chakra-ui/react';
 
 const App = () => (
-  <div>
+  <ChakraProvider>
     <NavBar></NavBar>
     <Router>
       <Home path="/" />
@@ -20,7 +18,7 @@ const App = () => (
       <Form path="form" />
       <UserStatus path="user-status" />
     </Router>
-  </div>
+  </ChakraProvider>
 );
 
 export default App;
