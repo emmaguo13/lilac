@@ -12,7 +12,7 @@ function capitalize(str) {
 function Form() {
     const { web3 } = useContext(UserContext);
 
-    const walletAddr = web3[0].slice(0, 4) + '...' + web3[0].slice(-4, -1);
+    const walletAddr = web3[0].slice(0, 4) + '...' + web3[0].slice(-4);
 
     const [name, setName] = useState('Test Name');
     const [toLogin, setToLogin] = useState(false);
