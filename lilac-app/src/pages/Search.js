@@ -42,7 +42,6 @@ function SearchBar() {
                     flexDirection: 'column',
                     alignItems: 'center',
 
-                    backgroundColor: '#FFDDFF',
                     marginTop: '5vh',
                 }}
             >

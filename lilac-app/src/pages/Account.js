@@ -26,7 +26,7 @@ function Account({ address }) {
     const [githubUsername, setGithubUsername] = useState('@TestUsername');
     const [events, setEvents] = useState([]);
     const [ens, setEns] = useState('');
-    const [worldReady, setWorldReady] = useState('');
+    const [verified, setVerified] = useState(false);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -60,6 +60,7 @@ function Account({ address }) {
             setName(data.user.name);
             setGithubUsername(data.user.github);
             setEns(data.user.ens);
+            setVerified(data.user.verified);
         };
 
         fetchEvents();
@@ -141,7 +142,7 @@ function Account({ address }) {
                         }}
                     >
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
-                        {address == web3[[0]] ? (
+                        {address == web3[0] ? (
                             <Input
                                 style={{ borderRadius: '1vw', size: 'small' }}
                                 onChange={(event) => setName(event.target.value)}
@@ -150,12 +151,13 @@ function Account({ address }) {
                         ) : (
                             <h3>{name}</h3>
                         )}
+                        <h6> {verified ? 'Verified' : 'Not Verified'} </h6>
 
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Wallet Address</div>
                         <h3>{walletAddr}</h3>
 
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>GitHub Username</div>
-                        {address == web3[[0]] ? (
+                        {address == web3[0] ? (
                             <Input
                                 style={{ borderRadius: '1vw', size: 'small' }}
                                 onChange={(event) => setGithubUsername(event.target.value)}
@@ -168,21 +170,22 @@ function Account({ address }) {
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Reputation Score</div>
                         <h2>{reputationScore}/1000</h2>
 
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            onClick={handleSubmit}
-                            className="button button--secondary"
-                        >
-                            Save
-                        </Button>
+                        {address == web3[0] ? (
+                            <Button
+                                variant="primary"
+                                type="submit"
+                                onClick={handleSubmit}
+                                className="button button--secondary"
+                            >
+                                Save
+                            </Button>
+                        ) : null}
                     </div>
                 </div>
             </div>
             <div style={{ fontSize: '20px', marginBottom: '2vh', fontWeight: '700' }}>Activity</div>
 
             <div
-                className="site-card-wrapper"
                 style={{
                     display: 'flex',
                     flexDirection: 'row',
@@ -197,14 +200,14 @@ function Account({ address }) {
                     <Card
                         title={capitalize(event.type)}
                         bordered={false}
-                        style={{ margin: '10px' }}
+                        style={{ margin: '10px', height: '200px' }}
                     >
                         <p>{capitalize(event.protocol)}</p>
                         <p>Reputation Points: {event.magnitude}</p>
                     </Card>
                 ))}
             </div>
-            {address == web3[[0]] ? (
+            {address == web3[0] ? (
                 <Button
                     className="button button--secondary"
                     variant="primary"
@@ -217,8 +220,7 @@ function Account({ address }) {
                         )
                     }
                 >
-                    {' '}
-                    Verify with WorldID{' '}
+                    {verified ? 'Already Verified!' : 'Verify with WorldID'}
                 </Button>
             ) : null}
             <br />

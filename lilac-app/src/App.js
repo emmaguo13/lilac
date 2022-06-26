@@ -22,17 +22,15 @@ function App() {
                 setWeb3,
             }}
         >
-            <div>
-                <NavBar></NavBar>
-                <Router>
-                    <Home path="/" />
-                    <WorldcoinConfirmation path="/worldcoin/:params" />
-                    <Login path="/login" />
-                    <Register path="/register/:address" />
-                    <Account path="/account/:address" />
-                    <Search path="/search" />
-                </Router>
-            </div>
+            <NavBar></NavBar>
+            <Router>
+                <Home path="/" />
+                <WorldcoinConfirmation path="/worldcoin/:params" />
+                <Login path="/login" />
+                <Register path="/register/:address" />
+                <Account path="/account/:address" />
+                <Search path="/search" />
+            </Router>
         </UserContext.Provider>
     );
 }
