@@ -29,7 +29,6 @@ function Login(props) {
             return;
         }
         var web = undefined;
-        if (web3 === '') {
             try {
                 // Request account access if needed
                 await window.ethereum.enable();
@@ -46,7 +45,6 @@ function Login(props) {
                 window.alert('You need to allow MetaMask.');
                 return;
             }
-        }
         const coinbase = await web.eth.getCoinbase();
         if (!coinbase) {
             window.alert('Please activate MetaMask first.');

@@ -11,14 +11,13 @@ function capitalize(str) {
 function Account({ address }) {
     const { web3 } = useContext(UserContext);
 
-    console.log('rendering account');
-
     const walletAddr = address.slice(0, 6) + '...' + address.slice(-5, -1);
 
     const [name, setName] = useState('Test Name');
-    const [reputationScore, setReputationScore] = useState(50);
+    const [reputationScore, setReputationScore] = useState(500);
     const [githubUsername, setGithubUsername] = useState('@TestUsername');
     const [events, setEvents] = useState([]);
+    const [ens, setEns] = useState('');
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -48,6 +47,7 @@ function Account({ address }) {
             setReputationScore(data.user.score);
             setName(data.user.name);
             setGithubUsername(data.user.github);
+            setEns(data.user.ens);
         };
 
         fetchEvents();
@@ -55,6 +55,8 @@ function Account({ address }) {
     }, [address]);
 
     console.log(walletAddr);
+    console.log(githubUsername);
+    console.log(name);
 
     const handleSubmit = async () => {
         await axios.put(`${process.env.REACT_APP_SERVER_URL}api/user/saveUserData`, {
