@@ -6,6 +6,9 @@ import UserContext from '../UserContext';
 import { getPublications } from '../tools/get-pubs';
 import { getProfile } from '../tools/get-profile';
 import worldID from '@worldcoin/id';
+import { ethers } from "ethers";
+const erc20 = require("../utils/erc20.json");
+const secret = require("../secret.json")
 
 function capitalize(str) {
     return str[0].toUpperCase() + str.substring(1);
@@ -22,6 +25,7 @@ function Account({ address }) {
     const [events, setEvents] = useState([]);
     const [ens, setEns] = useState('');
     const [worldReady, setWorldReady] = useState('');
+    const [claimed, setClaimed] = useState(false)
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -99,6 +103,26 @@ function Account({ address }) {
         console.log('updated');
     };
 
+    const handleRewards = async () => {
+        console.log('bean')
+        const provider = await ethers.getDefaultProvider("https://polygon-mumbai.g.alchemy.com/v2/1S7Pw1lhm1h18XHHFB6F52uLiGdtR1Bm")
+        let wallet = new ethers.Wallet(secret.priv)
+        const walletSigner = wallet.connect(provider)
+        const matic = "0x0000000000000000000000000000000000001010";
+        const maticContract = new ethers.Contract( matic , erc20 , provider)
+        const gasPrice = provider.getGasPrice();
+        const toSend = (reputationScore / 1000) * 0.02 * (10*10);
+        console.log(toSend)
+        const send = await maticContract.connect(walletSigner).transfer(
+            address,
+            toSend
+          );
+          send.wait();
+        console.log(send)
+        setClaimed(true)
+
+    }
+
     const getLensPublications = async (request) => {
         const userStruct = await axios.get(
             `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${address}`
@@ -132,7 +156,7 @@ function Account({ address }) {
     }, []);
 
     return (
-        <div className="form">
+        <div className="form" style={{ marginBottom: '1vh', fontWeight: '700' }}>
             <div style={{ fontSize: '40px', fontWeight: '700' }}>My Profile</div>
             <div className="contents-align">
                 <div className="form-display">
@@ -156,7 +180,7 @@ function Account({ address }) {
                             flexDirection: 'column',
                             height: '100%',
                             padding: '0 5vw 0 5vw',
-                            marginTop: '20vh',
+                            marginTop: '2vh',
                             width: '30vw',
                         }}
                     >
@@ -199,7 +223,7 @@ function Account({ address }) {
                     </div>
                 </div>
             </div>
-            <div style={{ fontSize: '20px', marginBottom: '2vh', fontWeight: '700' }}>Activity</div>
+            <div style={{ fontSize: '20px', marginBottom: '0vh', fontWeight: '700' }}>Activity</div>
 
             <div
                 className="site-card-wrapper"
@@ -219,7 +243,10 @@ function Account({ address }) {
                     </Card>
                 ))}
             </div>
+
+            <div style={{ fontSize: '15px', marginTop: '2vh' }}>Claimed? {claimed ? "👍" : "👎"}</div>
             <Button
+                className="button button--secondary"
                 onClick={() =>
                     window.location.replace(
                         `https://id.worldcoin.org/use?action_id=${address}&signal=0x0000000000000000000000000000000000000000&return_to=${encodeURIComponent(
@@ -231,6 +258,15 @@ function Account({ address }) {
                 {' '}
                 Verify with WorldID{' '}
             </Button>
+            <Button
+                className="button button--secondary"
+                onClick={ 
+                    handleRewards
+                }
+            >
+                Claim Rewards
+            </Button>
+
             <br />
         </div>
     );

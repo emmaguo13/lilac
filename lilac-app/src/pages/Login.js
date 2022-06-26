@@ -212,7 +212,6 @@ function Login(props) {
                 >
                     Sign in with your wallet
                 </h1>
-
                 <Button
                     className="button button--secondary"
                     variant="primary"
