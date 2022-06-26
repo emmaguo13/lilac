@@ -40,6 +40,9 @@ const userSchema = new mongoose.Schema({
     profileId: {
         type: String,
     },
+    verified: {
+        type: Boolean,
+    },
 });
 
 const User = mongoose.model('User', userSchema);
