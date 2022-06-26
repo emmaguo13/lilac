@@ -25,7 +25,11 @@ db.on('error', (err) => {
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+    cors({
+        origin: '*',
+    })
+);
 
 app.use('/api/user/', userRouter);
 app.use('/api/data/', dataRouter);

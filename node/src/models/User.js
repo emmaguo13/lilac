@@ -3,15 +3,6 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    ens: {
-        type: String,
-        trim: true,
-    },
     address: {
         type: String,
         required: true,
@@ -22,13 +13,18 @@ const userSchema = new mongoose.Schema({
             }
         },
     },
+    name: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    ens: {
+        type: String,
+        trim: true,
+    },
+
     github: {
         type: String,
-        validate(value) {
-            if (!validator.isURL(value)) {
-                throw new Error('Github URL is invalid');
-            }
-        },
     },
     twitter: {
         type: String,
@@ -40,11 +36,6 @@ const userSchema = new mongoose.Schema({
     },
     score: {
         type: Number,
-        validate(value) {
-            if (!validator.isInt(value)) {
-                throw new Error('Credit score is invalid');
-            }
-        },
     },
 });
 

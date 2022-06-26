@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Link, Input } from 'antd';
 import Web3 from 'web3';
 import axios from 'axios';
 import Register from './Register.js';
 import LoginBack from '../components/LoginBack.js';
-import Form from './Form.js';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import UserContext from '../UserContext';
+import Account from './Account.js';
 import { generateChallenge, authenticate } from '../tools/auth.js';
 
-let web3 = undefined; // Will hold the web3 instance
-// import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-
 function Login(props) {
+  const { web3, setWeb3 } = useContext(UserContext);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(true);
   const [goToReg, setGoToReg] = useState(false);
   const [authState, setAuthState] = useState(false);
+
+  useEffect(() => {
+    setAuthState(false);
+}, []);
 
   function handleLoggedIn(auth) {
     console.log('handleLoggedIn');
@@ -31,10 +35,18 @@ function Login(props) {
     }
   }
 
+  async function handleWCLogin() {
+    console.log('handling WalletConnect login');
+    const provider = new WalletConnectProvider({
+        infuraId: '2d00259a58f9421fbba51c39bfa30d7c',
+    });
+
+    await provider.enable();
+    return new Web3(provider);
+}
+
   async function handleLogin() {
-    console.log("handleing login")
     if (!window.ethereum) {
-      console.log('checking for metamask');
       window.alert('Please install MetaMask first.');
       return;
     }
@@ -126,7 +138,7 @@ function Login(props) {
       {goToReg === true ? (
         <Register />
       ) : authState ? (
-          <Form />
+          <Account />
       ) : (
         <div
           style={{

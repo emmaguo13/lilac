@@ -1,310 +1,196 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import DeedCard from '../components/DeedCard';
-import { navigate } from '@reach/router';
-import { getProfile } from '../tools/get-profile'
+import { Button, Tabs, Input, Upload, message, Card, Col, Row } from 'antd';
+import Login from './Login.js';
+import WhiteBackground from '../components/WhiteBackground.js';
+import UserContext from '../UserContext';
 import { getPublications } from '../tools/get-pubs'
-import { setAuthenticationToken } from '../utils/state';
-import { generateChallenge, authenticate } from '../tools/auth.js';
-import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer';
-//import { ethers, utils, Wallet } from 'ethers';
-//import { MUMBAI_RPC_URL, PK } from './config';
-import Web3 from 'web3';
-//import { omit } from './helpers';
-//import omitDeep from 'omit-deep';
+import { getProfile } from '../tools/get-profile'
 
-//import { Auth } from '../types';
-
-let web3 = undefined; // Will hold the web3 instance
+function capitalize(str) {
+    return str[0].toUpperCase() + str.substring(1);
+}
 
 function Account() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [profileID, setProfileID] = useState("");
+    const { web3 } = useContext(UserContext);
 
-  //end
-  // const getSigner = () => {
-  //   return new Wallet(PK, ethersProvider);
-  // };
+    const walletAddr = web3[0].slice(0, 4) + '...' + web3[0].slice(-4);
 
-  // const omit = (object, name) => {
-  //   return omitDeep(object, name);
-  // };
+    const [name, setName] = useState('Test Name');
+    const [toLogin, setToLogin] = useState(false);
+    const [reputationScore, setReputationScore] = useState(500);
+    const [githubUsername, setGithubUsername] = useState('@TestUsername');
+    const [events, setEvents] = useState([]);
+    const [ens, setEns] = useState('');
 
-  const { current: a } = useRef(['a']);
-  useEffect(() => {
-      setLoading(false);
-      console.log("getting profile")
-      getLensPublications();
+    useEffect(() => {
+        const fetchEvents = async () => {
+            console.log('fetching data');
+            const compound = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
+                params: { address: web3[0], protocol: 'compound' },
+            });
+            const dydx = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
+                params: { address: web3[0], protocol: 'dydx' },
+            });
 
-  });
+            setEvents([...compound.data.documents, ...dydx.data.documents]);
+        };
 
-  const getLensPublications = async (request) => {
-    // if (!profileID) {
-    //   throw new Error('Must have profile to run this');
-    // }
+        const fetchUser = async () => {
+            await axios.post(`${process.env.REACT_APP_SERVER_URL}api/user/updateCompoundCredit`, {
+                address: web3[0],
+            });
 
-    if (!web3) {
-      try {
-        await window.ethereum.enable();
-        web3 = new Web3(window.ethereum);
-        console.log(window.ethereum)
-      } catch (error) {
-        window.alert('You need to allow MetaMask.');
-        return;
-      }
-    }
+            const { data } = await axios.get(
+                `${process.env.REACT_APP_SERVER_URL}api/user/getUserData`,
+                {
+                    params: { address: web3[0] },
+                }
+            );
 
-    // web3.setProvider("https://polygon-mumbai.g.alchemy.com/v2/1S7Pw1lhm1h18XHHFB6F52uLiGdtR1Bm")
-    const challengeResponse = await generateChallenge("0x2a8181c5249Be4729f883C232e395621132c8570");
-    const signature = await web3.eth.personal.sign(challengeResponse.data.challenge.text, "0x2a8181c5249Be4729f883C232e395621132c8570");
-    const accessTokens = await authenticate("0x2a8181c5249Be4729f883C232e395621132c8570", signature);
-    console.log(accessTokens);
-    setAuthenticationToken(accessTokens.data.authenticate.accessToken)
+            setReputationScore(data.user.score);
+            setName(data.user.name);
+            setGithubUsername(data.user.github);
+            setEns(data.user.ens);
+        };
 
-    const result = await getPublications({
-      profileId: "0x01",
-      publicationTypes: ["POST", "COMMENT", "MIRROR"],
-    });
-  
-    console.log(result.data);
-  };
+        fetchEvents();
+        fetchUser();
+    }, [web3]);
 
+    console.log(walletAddr);
+    console.log(githubUsername);
+    console.log(name);
 
-  const profile = async (request) => {
-  
-    // TODO: get profile ID from frontend passed in, or through mongo
-    if (!web3) {
-      try {
-        await window.ethereum.enable();
-        web3 = new Web3(window.ethereum);
-        console.log(window.ethereum)
-      } catch (error) {
-        window.alert('You need to allow MetaMask.');
-        return;
-      }
-    }
+    const handleSubmit = async () => {
+        await axios.put(`${process.env.REACT_APP_SERVER_URL}api/user/saveUserData`, {
+            address: web3[0],
+            name,
+            github: githubUsername,
+            ens,
+        });
+        console.log('posted');
+    };
 
-    // web3.setProvider("https://polygon-mumbai.g.alchemy.com/v2/1S7Pw1lhm1h18XHHFB6F52uLiGdtR1Bm")
-    const challengeResponse = await generateChallenge("0x2a8181c5249Be4729f883C232e395621132c8570");
-    const signature = await web3.eth.personal.sign(challengeResponse.data.challenge.text, "0x2a8181c5249Be4729f883C232e395621132c8570");
-    const accessTokens = await authenticate("0x2a8181c5249Be4729f883C232e395621132c8570", signature);
-    console.log(accessTokens);
-    setAuthenticationToken(accessTokens.data.authenticate.accessToken)
-  
-    if (!request) {
-      request = { handle: "emmaguo.test" };
-    }
-  
-    const profile = await getProfile(request);
-  
-    console.log(profile.data);
-  };
+    const getLensPublications = async (request) => {
+      const userStruct = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${web3[0]}`);
+      const result = await getPublications({
+        profileId: userStruct.data.profileId,
+        publicationTypes: ["POST", "COMMENT", "MIRROR"],
+      });
+    
+      console.log(result.data);
+    };
 
-  // const signedTypeData = (
-  //   domain,
-  //   types,
-  //   value
-  // ) => {
-  //   const signer = getSigner();
-  //   // remove the __typedname from the signature!
-  //   return signer._signTypedData(
-  //     omit(domain, '__typename'),
-  //     omit(types, '__typename'),
-  //     omit(value, '__typename')
-  //   );
-  // };
+    const profile = async (request) => {
+      const userStruct = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${web3[0]}`);
+    
+      const result = await getProfile({
+        profileId: userStruct.data.profileId
+      })
+    
+      console.log(result.data);
+    };
   
 
-// const createPost = async () => {
-//     // const ipfsResult = await uploadIpfs<Metadata>({
-//     //   version: '1.0.0',
-//     //   metadata_id: uuidv4(),
-//     //   description: 'Description',
-//     //   content: 'Content',
-//     //   external_url: null,
-//     //   image: null,
-//     //   imageMimeType: null,
-//     //   name: 'Name',
-//     //   attributes: [],
-//     //   media: [
-//     //     // {
-//     //     //   item: 'https://scx2.b-cdn.net/gfx/news/hires/2018/lion.jpg',
-//     //     //   // item: 'https://assets-global.website-files.com/5c38aa850637d1e7198ea850/5f4e173f16b537984687e39e_AAVE%20ARTICLE%20website%20main%201600x800.png',
-//     //     //   type: 'image/jpeg',
-//     //     // },
-//     //   ],
-//     //   appId: 'testing123',
-//     // });
-//     // console.log('create post: ipfs result', ipfsResult);
-  
-//     // hard coded to make the code example clear
-//     const createPostRequest = {
-//       profileId,
-//       contentURI: 'API THAT RETURNS THE CORRECT CONTENT'
-//       collectModule: {
-//         // feeCollectModule: {
-//         //   amount: {
-//         //     currency: currencies.enabledModuleCurrencies.map(
-//         //       (c: any) => c.address
-//         //     )[0],
-//         //     value: '0.000001',
-//         //   },
-//         //   recipient: address,
-//         //   referralFee: 10.5,
-//         // },
-//         // revertCollectModule: true,
-//         freeCollectModule: { followerOnly: true },
-//         // limitedFeeCollectModule: {
-//         //   amount: {
-//         //     currency: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
-//         //     value: '2',
-//         //   },
-//         //   collectLimit: '20000',
-//         //   recipient: '0x3A5bd1E37b099aE3386D13947b6a90d97675e5e3',
-//         //   referralFee: 0,
-//         // },
-//       },
-//       referenceModule: {
-//         followerOnlyReferenceModule: false,
-//       },
-//     };
-  
-//     const result = await createPostTypedData(createPostRequest);
-//     console.log('create post: createPostTypedData', result);
-  
-//     const typedData = result.data.createPostTypedData.typedData;
-//     console.log('create post: typedData', typedData);
-  
-//     const signature = await signedTypeData(typedData.domain, typedData.types, typedData.value);
-//     console.log('create post: signature', signature);
-  
-//     // const { v, r, s } = splitSignature(signature);
-  
-//     // const tx = await lensHub.postWithSig({
-//     //   profileId: typedData.value.profileId,
-//     //   contentURI: typedData.value.contentURI,
-//     //   collectModule: typedData.value.collectModule,
-//     //   collectModuleInitData: typedData.value.collectModuleInitData,
-//     //   referenceModule: typedData.value.referenceModule,
-//     //   referenceModuleInitData: typedData.value.referenceModuleInitData,
-//     //   sig: {
-//     //     v,
-//     //     r,
-//     //     s,
-//     //     deadline: typedData.value.deadline,
-//     //   },
-//     // });
-//     // console.log('create post: tx hash', tx.hash);
-  
-//     // console.log('create post: poll until indexed');
-//     // const indexedResult = await pollUntilIndexed(tx.hash);
-  
-//     // console.log('create post: profile has been indexed', result);
-  
-//     // const logs = indexedResult.txReceipt.logs;
-  
-//     // console.log('create post: logs', logs);
-  
-//     // const topicId = utils.id(
-//     //   'PostCreated(uint256,uint256,string,address,bytes,address,bytes,uint256)'
-//     // );
-//     // console.log('topicid we care about', topicId);
-  
-//     // const profileCreatedLog = logs.find((l) => l.topics[0] === topicId);
-//     // console.log('create post: created log', profileCreatedLog);
-  
-//     // let profileCreatedEventLog = profileCreatedLog.topics;
-//     // console.log('create post: created event logs', profileCreatedEventLog);
-  
-//     // const publicationId = utils.defaultAbiCoder.decode(['uint256'], profileCreatedEventLog[2])[0];
-  
-//     // console.log('create post: contract publication id', BigNumber.from(publicationId).toHexString());
-//     // console.log(
-//     //   'create post: internal publication id',
-//     //   profileId + '-' + BigNumber.from(publicationId).toHexString()
-//     // );
-  
-//     // return result.data;
-//   };
-  
-  return (
-    <>
-      <div style={{ padding: '5vw', backgroundColor: '#FFFFFF' }}>
-        <div
-          style={{
-            width: '90vw',
-            height: '90vh',
-            backgroundColor: 'rgba(73, 194, 104, 0.42)',
-            borderTopLeftRadius: '2vw',
-            borderTopRightRadius: '2vw',
-            padding: '3vh 5vw 3vh 5vw',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <h1>Your Posts</h1>
-          {loading ? (
-            <div> Loading </div>
-          ) : (
-            data.map((deed, index) => (
-              <DeedCard deed={deed} onClick={() => navigate(`/deed/${deed.deedId}`)} />
-            ))
-          )}
-        </div>
-      </div>
-    </>
-  );
+    return (
+        <>
+            {' '}
+            {toLogin === true ? (
+                <Login />
+            ) : (
+                <div className="form">
+                    <div style={{ fontSize: '40px', fontWeight: '700' }}>My Profile</div>
+                    <div className="contents-align">
+                        <div className="form-display">
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    zIndex: '-1',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    flexDirection: 'column',
+                                    width: '50vw',
+                                }}
+                            >
+                                <WhiteBackground />
+                            </div>
+                            <div
+                                style={{
+                                    zIndex: '1',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    flexDirection: 'column',
+                                    height: '100%',
+                                    padding: '0 5vw 0 5vw',
+                                    marginTop: '20vh',
+                                    width: '30vw',
+                                }}
+                            >
+                                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
+                                <Input
+                                    style={{ borderRadius: '1vw', size: 'small' }}
+                                    onChange={(event) => setName(event.target.value)}
+                                    value={name}
+                                />
 
-  // const columns = [
-  //     {
-  //         title: 'FormID',
-  //         dataIndex: 'FormID',
-  //         key: 'FormID',
-  //         // render: (text) => <a>{text}</a>,
-  //     },
-  //     {
-  //         title: 'Public Address',
-  //         dataIndex: 'PublicAddress',
-  //         key: 'PublicAddress',
-  //         // render: (text) => <a>{text}</a>,
-  //     },
-  //     {
-  //         title: 'Coordinates',
-  //         dataIndex: 'Coordinates',
-  //         key: 'Coordinates',
-  //         // render: (text) => <a>{text}</a>,
-  //     },
-  //     {
-  //         title: 'Date',
-  //         dataIndex: 'Date',
-  //         key: 'Date',
-  //     },
+                                <div style={{ fontSize: '15px', marginTop: '2vh' }}>
+                                    Wallet Address
+                                </div>
+                                <h3>{walletAddr}</h3>
 
-  //     {
-  //         title: 'Tag',
-  //         key: 'Tag',
-  //         dataIndex: 'Tag',
-  //         render: (tags) => (
-  //             <>
-  //                 {tags.map((tag) => {
-  //                     let color = 'yellow';
-  //                     if (tag === 'APPROVED') {
-  //                         color = 'green';
-  //                     } else if (tag === 'REJECTED') {
-  //                         color = 'red';
-  //                     }
-  //                     return (
-  //                         <Tag color={color} key={tag}>
-  //                             {tag.toUpperCase()}
-  //                         </Tag>
-  //                     );
-  //                 })}
-  //             </>
-  //         ),
-  //     },
-  // ];
+                                <div style={{ fontSize: '15px', marginTop: '2vh' }}>
+                                    GitHub Username
+                                </div>
+                                <Input
+                                    style={{ borderRadius: '1vw', size: 'small' }}
+                                    onChange={(event) => setGithubUsername(event.target.value)}
+                                    value={githubUsername}
+                                />
+
+                                <div style={{ fontSize: '15px', marginTop: '2vh' }}>
+                                    Reputation Score
+                                </div>
+                                <h2>{reputationScore}/1000</h2>
+
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    onClick={handleSubmit}
+                                    className="button button--secondary"
+                                >
+                                    SAVE
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{ fontSize: '20px', marginBottom: '2vh', fontWeight: '700' }}>
+                        Activity
+                    </div>
+
+                    <div
+                        className="site-card-wrapper"
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            flexWrap: 'wrap',
+                            width: '70vw',
+                            backgroundColor: '#FFDDFF',
+                        }}
+                    >
+                        {events.map((event) => (
+                            <Card title={capitalize(event.type)} bordered={false}>
+                                <p>{capitalize(event.protocol)}</p>
+                                <p>Reputation Points: {event.magnitude}</p>
+                            </Card>
+                        ))}
+                    </div>
+                    <br />
+                </div>
+            )}
+        </>
+    );
 }
 
 export default Account;

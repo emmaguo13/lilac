@@ -2,6 +2,9 @@ const express = require('express');
 const Update = require('../models/Update');
 const Data = require('../models/Data');
 const { request, gql } = require('graphql-request');
+const User = require('../models/User');
+const axios = require('axios');
+
 require('dotenv').config();
 
 const router = express.Router();
@@ -28,6 +31,169 @@ router.get('/', async (req, res) => {
     }
 
     return res.status(200).json({ success: true, documents });
+});
+
+router.post('/updateCompoundGitHub', async (req, res) => {
+    const { address } = req.body;
+
+    if (!address) {
+        return res.status(400).json({
+            address: 'Address not found',
+        });
+    }
+
+    date = new Date(1593124212);
+    try {
+        let lastFetch = await Update.findOne({ protocol: 'compound-github', address });
+        console.log(lastFetch);
+        if (lastFetch) {
+            date = new Date(lastFetch.time);
+            lastFetch.time = Date.now();
+        } else {
+            lastFetch = new Update({ protocol: 'compound-github', address, time: Date.now() });
+        }
+
+        let user = await User.findOne({ address });
+        if (!user) {
+            return res.status(400).json({
+                address: 'No user associated with address',
+            });
+        }
+
+        let { data } = await axios.get(
+            `https://api.github.com/search/commits?q=+org:compound-finance+author:${
+                user.github
+            }+author-date:>${date.getFullYear()}-${date.getMonth()}-${date.getDate()} `,
+            {
+                headers: {
+                    Accept: 'application/vnd.github.v3.text-match+json',
+                    'User-Agent': 'Lilac',
+                },
+                auth: {
+                    username: 'timg512372',
+                    password: process.env.GITHUB_TOKEN,
+                },
+            }
+        );
+
+        data.items.forEach(async (commit) => {
+            console.log(commit);
+            const datapoint = new Data({
+                type: 'commit',
+                time: new Date(commit.commit.author.date).getTime(),
+                magnitude: 1,
+                address,
+                protocol: 'compound',
+            });
+            await datapoint.save();
+        });
+
+        await lastFetch.save();
+    } catch (e) {
+        console.log(e);
+        return res.status(500).send(e);
+    }
+    return res.status(200).json({ success: true });
+});
+
+// For compound the date will be in terms of blocks
+router.post('/updateCompound', async (req, res) => {
+    const { address } = req.body;
+
+    if (!address) {
+        return res.status(400).json({
+            address: 'Address not found',
+        });
+    }
+
+    let date = 1;
+
+    try {
+        let lastFetch = await Update.findOne({ protocol: 'compound', address });
+        console.log(lastFetch);
+        if (lastFetch) {
+            date = lastFetch.time;
+            lastFetch.time = Date.now();
+        } else {
+            lastFetch = new Update({ protocol: 'compound', address, time: Date.now() });
+        }
+
+        const proposal_query = gql`
+            query getProposals($date: BigInt!, $address: Bytes!) {
+                proposals(where: { endBlock_gt: $date, proposer: $address }) {
+                    id
+                    description
+                    status
+                    endBlock
+                }
+            }
+        `;
+
+        const { proposals } = await request(
+            `https://api.thegraph.com/subgraphs/name/protofire/compound-governance`,
+            proposal_query,
+            { date: date.toString(), address }
+        );
+
+        proposals.forEach(async (proposal) => {
+            const datapoint = new Data({
+                type: 'propose',
+                time: proposal.endBlock,
+                magnitude: proposal.status == 'EXECUTED' || proposal.status == 'QUEUED' ? 10 : 1,
+                address,
+                protocol: 'compound',
+            });
+            await datapoint.save();
+        });
+
+        const vote_query = gql`
+            query getVotes($address: Bytes!) {
+                votes(where: { voter: $address }) {
+                    id
+                    voter {
+                        id
+                    }
+                    votesRaw
+                    support
+                    proposal {
+                        status
+                        endBlock
+                    }
+                }
+            }
+        `;
+
+        const { votes } = await request(
+            `https://api.thegraph.com/subgraphs/name/protofire/compound-governance`,
+            vote_query,
+            { address }
+        );
+        // console.log(votes);
+
+        votes.forEach(async (vote) => {
+            if (vote.proposal.endBlock < date) {
+                return;
+            }
+
+            const datapoint = new Data({
+                type: 'vote',
+                time: vote.proposal.endBlock,
+                magnitude:
+                    (parseFloat(vote.votesRaw) / 10 ** 18) *
+                    (vote.support != (vote.proposal.status != 'CANCELLED') ? -1 : 1),
+                address,
+                protocol: 'compound',
+            });
+            await datapoint.save();
+        });
+
+        await lastFetch.save();
+    } catch (e) {
+        console.log(e);
+        return res.status(500).send(e);
+    }
+
+    return res.status(200).json({ success: true });
 });
 
 router.post('/updateSushi', async (req, res) => {

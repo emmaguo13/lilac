@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Login from './Login.js';
-import Form from './Form.js'
+import Form from './Account'
 
 function LoginController(props) {
 	const [authState, setAuthState] = useState(false);
