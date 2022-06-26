@@ -112,27 +112,14 @@ function Account({ address }) {
     };
 
     useEffect(() => {
-<<<<<<< HEAD
-        console.log('hi')
-=======
-        console.log('running use effect');
->>>>>>> 934c80f23d550f60c330467dcaee87b752cf2a1f
         const profile = async (request) => {
             console.log('fetching lens data');
             const userStruct = await axios.get(
                 `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${address}`
             );
-<<<<<<< HEAD
             console.log(userStruct)
             const result = await getProfile({
                 handle: userStruct.data.user.name + '.test',
-=======
-            // console.log(web3[0]);
-            // console.log(userStruct);
-            const result = await getProfile({
-                handle: userStruct.data.user.name,
-                //handle: 'emmaguo',
->>>>>>> 934c80f23d550f60c330467dcaee87b752cf2a1f
             });
             console.log(result);
             await axios.put(`${process.env.REACT_APP_SERVER_URL}api/user/saveUserData`, {
