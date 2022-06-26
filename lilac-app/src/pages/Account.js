@@ -5,7 +5,6 @@ import WhiteBackground from '../components/WhiteBackground.js';
 import UserContext from '../UserContext';
 import { getPublications } from '../tools/get-pubs';
 import { getProfile } from '../tools/get-profile';
-import worldID from '@worldcoin/id';
 
 function capitalize(str) {
     return str[0].toUpperCase() + str.substring(1);
@@ -27,7 +26,10 @@ function Account({ address }) {
         const fetchEvents = async () => {
             console.log('fetching data');
             const compound = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
-                params: { address: '0x8169522c2c57883e8ef80c498aab7820da539806', protocol: 'compound' },
+                params: {
+                    address: '0x8169522c2c57883e8ef80c498aab7820da539806',
+                    protocol: 'compound',
+                },
             });
             const dydx = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
                 params: { address, protocol: 'dydx' },
@@ -57,34 +59,6 @@ function Account({ address }) {
         fetchEvents();
         fetchUser();
     }, [address]);
-
-    // useEffect(() => {
-    //     window.addEventListener('DOMContentLoaded', async () => {
-    //         console.log('trying worldid');
-
-    //         try {
-    //             worldID.init('world-id-container', {
-    //                 enable_telemetry: false,
-    //                 action_id: 'wid_staging_bd32fe01801f577de8ae546ec30e765c', // <- use the address from the Developer Portal
-    //                 signal: address,
-    //             });
-
-    //             setWorldReady('ready');
-    //             console.log(worldID.isInitialized());
-
-    //             worldID
-    //                 .enable()
-    //                 .then((successResult) => {
-    //                     console.log('Verified successfully:', successResult);
-    //                     setWorldReady('ready');
-    //                 })
-    //                 .catch((errorResult) => console.warn('Verification failed:', errorResult)); // <- Pass this `result` to your backend or smart contract (see below)
-    //         } catch (failure) {
-    //             console.warn('World ID verification failed:', failure);
-    //             // Re-activate here so your end user can try again
-    //         }
-    //     });
-    // }, []);
 
     console.log(walletAddr);
     console.log(githubUsername);
@@ -117,7 +91,7 @@ function Account({ address }) {
             const userStruct = await axios.get(
                 `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${address}`
             );
-            console.log(userStruct)
+            console.log(userStruct);
             const result = await getProfile({
                 handle: userStruct.data.user.name + '.test',
             });

@@ -100,27 +100,4 @@ router.post('/updateCompoundCredit', async (req, res) => {
     }
 });
 
-// Save user data
-// router.put('/saveUserData', async (req, res) => {
-//     const { address, name } = req.body;
-
-//     let user = [];
-//     try {
-//         user = await User.findOne({ address });
-//         if (!user) {
-//             // no user found
-//             // create new user
-//             user = new User({ address, name });
-//         } else {
-//             // update old db index
-//             user.name = name;
-//         }
-//         await user.save();
-//     } catch (e) {
-//         console.log(e);
-//         return res.status(500).json({ success: false, error: e });
-//     }
-//     return res.status(200).json({ success: true, newUserInfo: user });
-// });
-
 module.exports = router;

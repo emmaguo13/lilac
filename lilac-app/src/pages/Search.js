@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AudioOutlined } from '@ant-design/icons';
 import { Button, Tabs, Input, Upload, message, Card, Col, Row, Space } from 'antd';
@@ -11,65 +11,60 @@ function capitalize(str) {
 
 const suffix = (
     <AudioOutlined
-      style={{
-        fontSize: 16,
-        color: '#1890ff',
-      }}
+        style={{
+            fontSize: 16,
+            color: '#1890ff',
+        }}
     />
-  );
+);
 
 const onSearch = (value) => console.log(value);
 
-  
 function SearchBar() {
-
     const [events, setEvents] = useState([]);
     return (
         <>
-        <div
-        style={{
-            width: '100vw',
-            position: 'absolute',
-            display: 'flex',
+            <div
+                style={{
+                    width: '100vw',
+                    position: 'absolute',
+                    display: 'flex',
                     justifyContent: 'center',
-                    alignItems: 'center',            
-        }}
-        >
-        <Space direction="vertical">
-            <Search placeholder="input search text" onSearch={onSearch} enterButton />
-        </Space>
-        </div>
-        <div
-        className="site-card-wrapper"
-        style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            flexWrap: 'wrap',
-            width: '70vw',
-            backgroundColor: '#FFDDFF',
-        }}
-        >
-            {/* {events.map((event) => (
+                    alignItems: 'center',
+                }}
+            >
+                <Space direction="vertical">
+                    <Search placeholder="input search text" onSearch={onSearch} enterButton />
+                </Space>
+            </div>
+            <div
+                className="site-card-wrapper"
+                style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    flexWrap: 'wrap',
+                    width: '70vw',
+                    backgroundColor: '#FFDDFF',
+                }}
+            >
+                {/* {events.map((event) => (
                 <Card title={capitalize(event.type)} bordered={false}>
                     <p>{capitalize(event.protocol)}</p>
                     <p>Reputation Points: {event.magnitude}</p>
                 </Card>
             ))} */}
-            <Card title={"Deven"} bordered={false}>
-                <p>{capitalize("dydx")}</p>
-                <p>Reputation Points: {50000}</p>
-            </Card>
-        </div>
-        
+                <Card title={'Deven'} bordered={false}>
+                    <p>{capitalize('dydx')}</p>
+                    <p>Reputation Points: {50000}</p>
+                </Card>
+            </div>
         </>
-    )
+    );
 }
 
 export default SearchBar;
 
-
-
 // const App = () => (
 // );
 
@@ -211,4 +206,4 @@ export default SearchBar;
 //   </Space>
 // );
 
-// export default App;% 
+// export default App;%
