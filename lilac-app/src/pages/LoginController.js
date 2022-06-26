@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Login from './Login.js';
-import Form from './Account'
+import Account from './Account'
+import UserContext from '../UserContext';
 
 function LoginController(props) {
+	const { web3 } = useContext(UserContext);
+
 	const [authState, setAuthState] = useState(false);
 	const [isNotary, setIsNotary] = useState(false);
 
@@ -29,11 +32,13 @@ function LoginController(props) {
 	};
    
 		return (
-			<> {
+			<> 
+			{
 				authState ? (
+				// web3.instance == '' ? ( <- this makes it break
 					
-							<Form />					
-					
+					// <meta http-equiv="Refresh" content="0; url='/account'" />					
+					<Account />
 				) : (
 					
 					<div className="Signin">
