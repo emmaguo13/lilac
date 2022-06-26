@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const router = express.Router();
 
-// Fetch User Data 
+// Fetch User Data
 router.get('/getUserData', async (req, res) => {
     const { address } = req.query;
 
@@ -68,7 +68,7 @@ router.post('/updateCompoundCredit', async (req, res) => {
             }
         });
 
-        adjusted_score = 1000 / (1 + Math.E ** (-0.1 * currentScore));
+        adjusted_score = 1000 / (1 + Math.E ** (-0.01 * currentScore));
 
         let user = await User.findOne({ address });
         user.score = parseInt(adjusted_score);
@@ -79,7 +79,6 @@ router.post('/updateCompoundCredit', async (req, res) => {
         return res.status(500).send(e);
     }
 });
-
 
 // Save user data
 router.put('/saveUserData', async (req, res) => {
@@ -94,7 +93,7 @@ router.put('/saveUserData', async (req, res) => {
             user = new User({ address, name });
         } else {
             // update old db index
-            user.name = name
+            user.name = name;
         }
         await user.save();
     } catch (e) {
