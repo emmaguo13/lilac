@@ -37,6 +37,7 @@ app.use('/api/data/', dataRouter);
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
+    console.log(process.env.MONGOOSE)
 });
 
 module.exports = { app };

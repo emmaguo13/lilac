@@ -25,7 +25,7 @@ function Account({ address }) {
         const fetchEvents = async () => {
             console.log('fetching data');
             const compound = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
-                params: { address, protocol: 'compound' },
+                params: { address: '0x8169522c2c57883e8ef80c498aab7820da539806', protocol: 'compound' },
             });
             const dydx = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
                 params: { address, protocol: 'dydx' },
@@ -71,7 +71,7 @@ function Account({ address }) {
 
     const getLensPublications = async (request) => {
         const userStruct = await axios.get(
-            `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${web3[0]}`
+            `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${address}`
         );
         const result = await getPublications({
             profileId: userStruct.data.profileId,
@@ -82,12 +82,14 @@ function Account({ address }) {
     };
 
     useEffect(() => {
+        console.log('hi')
         const profile = async (request) => {
             const userStruct = await axios.get(
-                `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${web3[0]}`
+                `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${address}`
             );
+            console.log(userStruct)
             const result = await getProfile({
-                profileId: userStruct.data.name,
+                handle: userStruct.data.user.name + '.test',
             });
             console.log(result.data);
             await axios.put(`${process.env.REACT_APP_SERVER_URL}api/user/saveUserData`, {
@@ -96,9 +98,7 @@ function Account({ address }) {
             });
         };
 
-        if (web3[0] == address) {
-            profile();
-        }
+        profile();
     }, []);
 
     return (
