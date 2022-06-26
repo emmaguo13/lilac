@@ -26,19 +26,20 @@ router.get('/getUserData', async (req, res) => {
 });
 
 router.put('/saveUserData', async (req, res) => {
-    const { address, name, ens, github, twitter } = req.body;
+    const { address, name, ens, github, twitter, profileId } = req.body;
     let user = [];
     try {
         user = await User.findOne({ address });
         if (!user) {
             // no user found, create new user
-            user = new User({ address, name, ens, github, twitter });
+            user = new User({ address, name, ens, github, twitter, profileId });
         } else {
             // update old db index
             user.name = name;
             user.ens = ens;
             user.github = github;
             user.twitter = twitter;
+            user.profileId = profileId;
         }
         await user.save();
     } catch (e) {
@@ -81,26 +82,26 @@ router.post('/updateCompoundCredit', async (req, res) => {
 });
 
 // Save user data
-router.put('/saveUserData', async (req, res) => {
-    const { address, name } = req.body;
+// router.put('/saveUserData', async (req, res) => {
+//     const { address, name } = req.body;
 
-    let user = [];
-    try {
-        user = await User.findOne({ address });
-        if (!user) {
-            // no user found
-            // create new user
-            user = new User({ address, name });
-        } else {
-            // update old db index
-            user.name = name;
-        }
-        await user.save();
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json({ success: false, error: e });
-    }
-    return res.status(200).json({ success: true, newUserInfo: user });
-});
+//     let user = [];
+//     try {
+//         user = await User.findOne({ address });
+//         if (!user) {
+//             // no user found
+//             // create new user
+//             user = new User({ address, name });
+//         } else {
+//             // update old db index
+//             user.name = name;
+//         }
+//         await user.save();
+//     } catch (e) {
+//         console.log(e);
+//         return res.status(500).json({ success: false, error: e });
+//     }
+//     return res.status(200).json({ success: true, newUserInfo: user });
+// });
 
 module.exports = router;

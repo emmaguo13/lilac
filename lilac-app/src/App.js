@@ -27,7 +27,7 @@ function App() {
                 <Router>
                     <Home path="/" />
                     <LoginController path="/login" />
-                    <Register path="/register" />
+                    <Register path="/register/:address" />
                     <Account path="/account/:address" />
                     <Search path="/search" />
                     <UserStatus path="user-status" />
