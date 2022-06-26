@@ -1,26 +1,22 @@
 #logo {
-  position:absolute;
-  left:8.6em;
+  position:relative;
+  left:-6em;
   height:60px;
   vertical-align:top;
-  // background-color: #004a45;
   overflow:hidden;
 }
 .logo-item{
-  position: absolute;
+  position: relative;
   top: 2px;
-  left:-7.5em;
-  size: 150%;
-  font-size: 20;
+  left:-7.3em;
 }
 .nav-item {
   position: relative;
-  right: -175px;
+  right: -4.5em;
 }
 header {
   display: flex;
   justify-content: center;
-  // background-color: #004a45;
   nav {
     height: 4rem;
     width: 100%;
@@ -34,7 +30,7 @@ header {
       right:10px;
       height:65px;
       flex: 1;
-      color: black;
+      color: #000;
     }
 
     a {

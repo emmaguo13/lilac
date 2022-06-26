@@ -26,7 +26,7 @@ router.get('/getUserData', async (req, res) => {
 });
 
 router.put('/saveUserData', async (req, res) => {
-    const { address, name, ens, github, twitter, profileId } = req.body;
+    const { address, name, ens, github, twitter, profileId, verified } = req.body;
     let user = [];
     try {
         user = await User.findOne({ address });
@@ -35,11 +35,30 @@ router.put('/saveUserData', async (req, res) => {
             user = new User({ address, name, ens, github, twitter, profileId });
         } else {
             // update old db index
-            user.name = name;
-            user.ens = ens;
-            user.github = github;
-            user.twitter = twitter;
-            user.profileId = profileId;
+
+            if (name) {
+                user.name = name;
+            }
+
+            if (ens) {
+                user.ens = ens;
+            }
+
+            if (github) {
+                user.github = github;
+            }
+
+            if (twitter) {
+                user.twitter = twitter;
+            }
+
+            if (profileId) {
+                user.profileId = profileId;
+            }
+
+            if (verified != null) {
+                user.verified = verified;
+            }
         }
         await user.save();
     } catch (e) {

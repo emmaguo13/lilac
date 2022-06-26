@@ -5,6 +5,7 @@ import WhiteBackground from '../components/WhiteBackground.js';
 import UserContext from '../UserContext';
 import { getPublications } from '../tools/get-pubs';
 import { getProfile } from '../tools/get-profile';
+import worldID from '@worldcoin/id';
 
 function capitalize(str) {
     return str[0].toUpperCase() + str.substring(1);
@@ -20,6 +21,7 @@ function Account({ address }) {
     const [githubUsername, setGithubUsername] = useState('@TestUsername');
     const [events, setEvents] = useState([]);
     const [ens, setEns] = useState('');
+    const [worldReady, setWorldReady] = useState('');
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -56,6 +58,34 @@ function Account({ address }) {
         fetchUser();
     }, [address]);
 
+    // useEffect(() => {
+    //     window.addEventListener('DOMContentLoaded', async () => {
+    //         console.log('trying worldid');
+
+    //         try {
+    //             worldID.init('world-id-container', {
+    //                 enable_telemetry: false,
+    //                 action_id: 'wid_staging_bd32fe01801f577de8ae546ec30e765c', // <- use the address from the Developer Portal
+    //                 signal: address,
+    //             });
+
+    //             setWorldReady('ready');
+    //             console.log(worldID.isInitialized());
+
+    //             worldID
+    //                 .enable()
+    //                 .then((successResult) => {
+    //                     console.log('Verified successfully:', successResult);
+    //                     setWorldReady('ready');
+    //                 })
+    //                 .catch((errorResult) => console.warn('Verification failed:', errorResult)); // <- Pass this `result` to your backend or smart contract (see below)
+    //         } catch (failure) {
+    //             console.warn('World ID verification failed:', failure);
+    //             // Re-activate here so your end user can try again
+    //         }
+    //     });
+    // }, []);
+
     console.log(walletAddr);
     console.log(githubUsername);
     console.log(name);
@@ -82,16 +112,29 @@ function Account({ address }) {
     };
 
     useEffect(() => {
+<<<<<<< HEAD
         console.log('hi')
+=======
+        console.log('running use effect');
+>>>>>>> 934c80f23d550f60c330467dcaee87b752cf2a1f
         const profile = async (request) => {
+            console.log('fetching lens data');
             const userStruct = await axios.get(
                 `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${address}`
             );
+<<<<<<< HEAD
             console.log(userStruct)
             const result = await getProfile({
                 handle: userStruct.data.user.name + '.test',
+=======
+            // console.log(web3[0]);
+            // console.log(userStruct);
+            const result = await getProfile({
+                handle: userStruct.data.user.name,
+                //handle: 'emmaguo',
+>>>>>>> 934c80f23d550f60c330467dcaee87b752cf2a1f
             });
-            console.log(result.data);
+            console.log(result);
             await axios.put(`${process.env.REACT_APP_SERVER_URL}api/user/saveUserData`, {
                 address,
                 profileId: result.data.id,
@@ -131,16 +174,29 @@ function Account({ address }) {
                         }}
                     >
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
+                        {address == web3[[0]] ? (
+                            <Input
+                                style={{ borderRadius: '1vw', size: 'small' }}
+                                onChange={(event) => setName(event.target.value)}
+                                value={name}
+                            />
+                        ) : (
                             <h3>{name}</h3>
+                        )}
 
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Wallet Address</div>
                         <h3>{walletAddr}</h3>
 
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>GitHub Username</div>
+                        {address == web3[[0]] ? (
                             <Input
                                 style={{ borderRadius: '1vw', size: 'small' }}
                                 onChange={(event) => setGithubUsername(event.target.value)}
+                                value={githubUsername}
                             />
+                        ) : (
+                            <h3>{githubUsername}</h3>
+                        )}
 
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Reputation Score</div>
                         <h2>{reputationScore}/1000</h2>
@@ -176,6 +232,18 @@ function Account({ address }) {
                     </Card>
                 ))}
             </div>
+            <Button
+                onClick={() =>
+                    window.location.replace(
+                        `https://id.worldcoin.org/use?action_id=${address}&signal=0x0000000000000000000000000000000000000000&return_to=${encodeURIComponent(
+                            `${process.env.REACT_APP_CLIENT_URL}worldcoin/${address}`
+                        )}`
+                    )
+                }
+            >
+                {' '}
+                Verify with WorldID{' '}
+            </Button>
             <br />
         </div>
     );
