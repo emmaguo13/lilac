@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, Link, Input } from 'antd';
+import { Button } from 'antd';
 import Web3 from 'web3';
-import axios from 'axios';
-import Register from './Register.js';
 import LoginBack from '../components/LoginBack.js';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import { navigate } from '@reach/router';
 import UserContext from '../UserContext';
 import Account from './Account.js';
 import { generateChallenge, authenticate } from '../tools/auth.js';
