@@ -153,7 +153,7 @@ function Login(props) {
                         fontWeight: '700',
                     }}
                 >
-                    Sign in with Metamask
+                    Sign in with your wallet
                 </h1>
 
                 <Button
