@@ -25,11 +25,6 @@ const userSchema = new mongoose.Schema({
 
     github: {
         type: String,
-        validate(value) {
-            if (!validator.isURL(value)) {
-                throw new Error('Github URL is invalid');
-            }
-        },
     },
     twitter: {
         type: String,

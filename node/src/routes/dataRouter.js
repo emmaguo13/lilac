@@ -60,11 +60,10 @@ router.post('/updateCompoundGitHub', async (req, res) => {
             });
         }
 
-        let index = user.github.indexOf('github');
         let { data } = await axios.get(
-            `https://api.github.com/search/commits?q=+org:compound-finance+author:${user.github.substring(
-                index + 11
-            )}+author-date:>${date.getFullYear()}-${date.getMonth()}-${date.getDate()} `,
+            `https://api.github.com/search/commits?q=+org:compound-finance+author:${
+                user.github
+            }+author-date:>${date.getFullYear()}-${date.getMonth()}-${date.getDate()} `,
             {
                 headers: {
                     Accept: 'application/vnd.github.v3.text-match+json',
