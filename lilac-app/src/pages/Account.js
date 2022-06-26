@@ -131,29 +131,16 @@ function Account({ address }) {
                         }}
                     >
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
-                        {address == web3[[0]] ? (
-                            <Input
-                                style={{ borderRadius: '1vw', size: 'small' }}
-                                onChange={(event) => setName(event.target.value)}
-                                value={name}
-                            />
-                        ) : (
                             <h3>{name}</h3>
-                        )}
 
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Wallet Address</div>
                         <h3>{walletAddr}</h3>
 
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>GitHub Username</div>
-                        {address == web3[[0]] ? (
                             <Input
                                 style={{ borderRadius: '1vw', size: 'small' }}
                                 onChange={(event) => setGithubUsername(event.target.value)}
-                                value={githubUsername}
                             />
-                        ) : (
-                            <h3>{githubUsername}</h3>
-                        )}
 
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Reputation Score</div>
                         <h2>{reputationScore}/1000</h2>

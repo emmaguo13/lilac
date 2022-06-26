@@ -116,7 +116,7 @@ function Register({ address }) {
 
                     <div style={{ fontSize: '15px', marginTop: '2vh' }}>Public Address</div>
                     <Input
-                    defaultValue={account}
+                    defaultValue={address}
                         style={{ borderRadius: '1vw' }}
                         onChange={(event) => setPublicAddress(event.target.value)}
                     />
