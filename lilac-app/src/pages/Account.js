@@ -19,6 +19,7 @@ function Form() {
     const [reputationScore, setReputationScore] = useState(50);
     const [githubUsername, setGithubUsername] = useState('@TestUsername');
     const [events, setEvents] = useState([]);
+    const [ens, setEns] = useState('');
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -48,6 +49,7 @@ function Form() {
             setReputationScore(data.user.score);
             setName(data.user.name);
             setGithubUsername(data.user.github);
+            setEns(data.user.ens);
         };
 
         fetchEvents();
@@ -55,10 +57,18 @@ function Form() {
     }, [web3]);
 
     console.log(walletAddr);
+    console.log(githubUsername);
+    console.log(name);
 
-    function handleSubmit() {
-        console.log('beans');
-    }
+    const handleSubmit = async () => {
+        await axios.put(`${process.env.REACT_APP_SERVER_URL}api/user/saveUserData`, {
+            address: web3[0],
+            name,
+            github: githubUsername,
+            ens,
+        });
+        console.log('posted');
+    };
 
     return (
         <>
@@ -98,7 +108,7 @@ function Form() {
                                 <Input
                                     style={{ borderRadius: '1vw', size: 'small' }}
                                     onChange={(event) => setName(event.target.value)}
-                                    defaultValue={name}
+                                    value={name}
                                 />
 
                                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>
@@ -112,7 +122,7 @@ function Form() {
                                 <Input
                                     style={{ borderRadius: '1vw', size: 'small' }}
                                     onChange={(event) => setGithubUsername(event.target.value)}
-                                    defaultValue={githubUsername}
+                                    value={githubUsername}
                                 />
 
                                 <div style={{ fontSize: '15px', marginTop: '2vh' }}>
