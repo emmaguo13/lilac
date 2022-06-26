@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import Layout from '../components/Layout';
-import { Link, navigate } from '@reach/router';
+import { navigate } from '@reach/router';
 import axios from 'axios';
 
 import { ReactComponent as SplashGraphic } from '../svg/splash.svg';

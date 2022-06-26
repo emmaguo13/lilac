@@ -11,6 +11,12 @@ const erc20 = require("../utils/erc20.json");
 const secret = require("../secret.json")
 
 function capitalize(str) {
+    if (str === 'dydx') {
+        return 'dYdX';
+    }
+    if (str.length === 0) {
+        return '';
+    }
     return str[0].toUpperCase() + str.substring(1);
 }
 
@@ -31,7 +37,10 @@ function Account({ address }) {
         const fetchEvents = async () => {
             console.log('fetching data');
             const compound = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
-                params: { address: '0x8169522c2c57883e8ef80c498aab7820da539806', protocol: 'compound' },
+                params: {
+                    address,
+                    protocol: 'compound',
+                },
             });
             const dydx = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
                 params: { address, protocol: 'dydx' },
@@ -61,34 +70,6 @@ function Account({ address }) {
         fetchEvents();
         fetchUser();
     }, [address]);
-
-    // useEffect(() => {
-    //     window.addEventListener('DOMContentLoaded', async () => {
-    //         console.log('trying worldid');
-
-    //         try {
-    //             worldID.init('world-id-container', {
-    //                 enable_telemetry: false,
-    //                 action_id: 'wid_staging_bd32fe01801f577de8ae546ec30e765c', // <- use the address from the Developer Portal
-    //                 signal: address,
-    //             });
-
-    //             setWorldReady('ready');
-    //             console.log(worldID.isInitialized());
-
-    //             worldID
-    //                 .enable()
-    //                 .then((successResult) => {
-    //                     console.log('Verified successfully:', successResult);
-    //                     setWorldReady('ready');
-    //                 })
-    //                 .catch((errorResult) => console.warn('Verification failed:', errorResult)); // <- Pass this `result` to your backend or smart contract (see below)
-    //         } catch (failure) {
-    //             console.warn('World ID verification failed:', failure);
-    //             // Re-activate here so your end user can try again
-    //         }
-    //     });
-    // }, []);
 
     console.log(walletAddr);
     console.log(githubUsername);
@@ -141,7 +122,7 @@ function Account({ address }) {
             const userStruct = await axios.get(
                 `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${address}`
             );
-            console.log(userStruct)
+            console.log(userStruct);
             const result = await getProfile({
                 handle: userStruct.data.user.name + '.test',
             });
@@ -245,19 +226,23 @@ function Account({ address }) {
             </div>
 
             <div style={{ fontSize: '15px', marginTop: '2vh' }}>Claimed? {claimed ? "👍" : "👎"}</div>
-            <Button
-                className="button button--secondary"
-                onClick={() =>
-                    window.location.replace(
-                        `https://id.worldcoin.org/use?action_id=${address}&signal=0x0000000000000000000000000000000000000000&return_to=${encodeURIComponent(
-                            `${process.env.REACT_APP_CLIENT_URL}worldcoin/${address}`
-                        )}`
-                    )
-                }
-            >
-                {' '}
-                Verify with WorldID{' '}
-            </Button>
+            {address == web3[[0]] ? (
+                <Button
+                    className="button button--secondary"
+                    variant="primary"
+                    type="submit"
+                    onClick={() =>
+                        window.location.replace(
+                            `https://id.worldcoin.org/use?action_id=${address}&signal=0x0000000000000000000000000000000000000000&return_to=${encodeURIComponent(
+                                `${process.env.REACT_APP_CLIENT_URL}worldcoin/${address}`
+                            )}`
+                        )
+                    }
+                >
+                    {' '}
+                    Verify with WorldID{' '}
+                </Button>
+            ) : null}
             <Button
                 className="button button--secondary"
                 onClick={ 

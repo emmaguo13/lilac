@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button } from 'antd';
 import Web3 from 'web3';
-import LoginBack from '../components/LoginBack.js';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { navigate } from '@reach/router';
-import UserContext from '../UserContext';
-import Account from './Account.js';
 import axios from 'axios';
+
 import { generateChallenge, authenticate } from '../tools/auth.js';
 import { setAuthenticationToken } from '../utils/state.js';
+import LoginBack from '../components/LoginBack.js';
+import UserContext from '../UserContext';
 
 function Login(props) {
     const { web3, setWeb3 } = useContext(UserContext);
@@ -30,9 +30,8 @@ function Login(props) {
 
         await provider.enable();
         web3Instance = new Web3(provider);
-        console.log("connected walletconnect");
-        
-        
+        console.log('connected walletconnect');
+
         // Subscribe to session disconnection
         // provider.on("disconnect", (code, reason) => {
         // console.log(code, reason);
@@ -40,7 +39,7 @@ function Login(props) {
 
         try {
             accounts = await web3Instance.eth.getAccounts();
-            console.log("got accounts");
+            console.log('got accounts');
             console.log(accounts[0]);
             console.log(accounts[1]);
         } catch (error) {
@@ -53,10 +52,10 @@ function Login(props) {
             challengeResponse.data.challenge.text,
             accounts[0]
         );
-        console.log("signature received");
+        console.log('signature received');
         console.log(signature);
 
-        console.log("access tokens");
+        console.log('access tokens');
         const accessTokens = await authenticate(accounts[0], signature);
         console.log(accessTokens);
         setAuthenticationToken(accessTokens.data.authenticate.accessToken);
@@ -202,32 +201,42 @@ function Login(props) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'column',
-                    marginTop: '15vh',
                 }}
             >
                 <h1
                     style={{
                         fontWeight: '700',
+                        margin: '10vh 0vh 4vh 0vh',
                     }}
                 >
                     Sign in with your wallet
                 </h1>
-                <Button
-                    className="button button--secondary"
-                    variant="primary"
-                    type="submit"
-                    onClick={handleLogin}
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-around',
+                        alignItems: 'center',
+                    }}
                 >
-                    Continue
-                </Button>
-                <Button
-                    className="button button--secondary"
-                    variant="primary"
-                    type="submit"
-                    onClick={handleWCLogin}
-                >
-                    WalletConnect
-                </Button>
+                    <Button
+                        className="button button--secondary"
+                        variant="primary"
+                        type="submit"
+                        onClick={handleLogin}
+                        style={{ marginRight: '7vw' }}
+                    >
+                        MetaMask
+                    </Button>
+                    <Button
+                        className="button button--secondary"
+                        variant="primary"
+                        type="submit"
+                        onClick={handleWCLogin}
+                    >
+                        WalletConnect
+                    </Button>
+                </div>
             </div>
         </div>
     );
