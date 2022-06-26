@@ -76,7 +76,7 @@ function Login(props) {
             }
         );
         console.log(data);
-        if (!data.user) {
+        if (!data.user && !data.user[0]) {
             navigate(`/register/${accounts[0]}`);
         } else {
             // const message = await handleSignMessage(data.user[0].address, data.user[0].nonce);
