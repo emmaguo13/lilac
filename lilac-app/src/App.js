@@ -4,7 +4,7 @@ import UserStatus from './pages/UserStatus.js';
 import Home from './pages/Home.js';
 import LoginController from './pages/LoginController.js';
 import Register from './pages/Register.js';
-import Form from './pages/Account.js';
+import Account from './pages/Account.js';
 import NavBar from './components/NavBar.js';
 import UserContext from "./UserContext";
 import Search from './pages/Search.js';
@@ -26,7 +26,7 @@ function App() {
       <Home path="/" />
       <LoginController path="/login" />
       <Register path="/register" />
-      <Form path="/form" />
+      <Account path="/account" />
       <Search path="/search" />
       <UserStatus path="user-status" />
     </Router>

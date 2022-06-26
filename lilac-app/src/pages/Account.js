@@ -9,7 +9,7 @@ function capitalize(str) {
     return str[0].toUpperCase() + str.substring(1);
 }
 
-function Form() {
+function Account() {
     const { web3 } = useContext(UserContext);
 
     const walletAddr = web3[0].slice(0, 4) + '...' + web3[0].slice(-4, -1);
@@ -160,7 +160,7 @@ function Form() {
     );
 }
 
-export default Form;
+export default Account;
 
 /**deed name
  * legal name 

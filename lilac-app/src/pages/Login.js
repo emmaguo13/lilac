@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import axios from 'axios';
 import Register from './Register.js';
 import LoginBack from '../components/LoginBack.js';
-import Form from './Account.js';
+import Account from './Account.js';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import UserContext from '../UserContext';
 
@@ -145,7 +145,9 @@ function Login(props) {
             {goToReg === true ? (
                 <Register />
             ) : authState ? (
-                <Form />
+            // : {web3} ? (
+                // <meta http-equiv="Refresh" content="0; url='/account'" />
+                <Account />
             ) : (
                 <div
                     style={{
