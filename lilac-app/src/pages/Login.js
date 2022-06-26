@@ -6,8 +6,9 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { navigate } from '@reach/router';
 import UserContext from '../UserContext';
 import Account from './Account.js';
-import { generateChallenge, authenticate } from '../tools/auth.js';
 import axios from 'axios';
+import Register from './Register.js';
+import { generateChallenge, authenticate } from '../tools/auth.js';
 import { setAuthenticationToken } from '../utils/state.js';
 
 function Login(props) {
