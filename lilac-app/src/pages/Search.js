@@ -60,7 +60,7 @@ function SearchBar() {
                         justifyContent: 'space-around',
                         flexWrap: 'wrap',
                         width: '70vw',
-                        backgroundColor: '#FFDDFF',
+                        // backgroundColor: '#FFDDFF',
                         alignItems: 'center',
                         marginTop: '3vh',
                     }}

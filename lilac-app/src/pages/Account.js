@@ -206,7 +206,9 @@ function Account({ address }) {
                     </div>
                 </div>
             </div>
-            <div style={{ fontSize: '20px', marginBottom: '0vh', fontWeight: '700' }}>Activity</div>
+            <div style={{ fontSize: '20px', margin: '3vh 0vh 0vh 0vh', fontWeight: '700' }}>
+                Activity
+            </div>
 
             <div
                 style={{
@@ -229,9 +231,7 @@ function Account({ address }) {
                     </Card>
                 ))}
             </div>
-            <div style={{ fontSize: '15px', marginTop: '2vh' }}>
-                Claimed? {claimed ? '👍' : '👎'}
-            </div>
+
             {address == web3[[0]] ? (
                 <Button
                     className="button button--secondary"
@@ -248,6 +248,10 @@ function Account({ address }) {
                     {verified ? 'Already Verified!' : 'Verify with WorldID'}
                 </Button>
             ) : null}
+
+            <div style={{ fontSize: '15px', marginTop: '2vh' }}>
+                Claimed? {claimed ? '👍' : '👎'}
+            </div>
             <Button className="button button--secondary" onClick={handleRewards}>
                 Claim Rewards
             </Button>
