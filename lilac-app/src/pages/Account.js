@@ -3,8 +3,8 @@ import axios from 'axios';
 import { Button, Tabs, Input, Upload, message, Card, Col, Row } from 'antd';
 import WhiteBackground from '../components/WhiteBackground.js';
 import UserContext from '../UserContext';
-import { getPublications } from '../tools/get-pubs'
-import { getProfile } from '../tools/get-profile'
+import { getPublications } from '../tools/get-pubs';
+import { getProfile } from '../tools/get-profile';
 
 function capitalize(str) {
     return str[0].toUpperCase() + str.substring(1);
@@ -70,25 +70,36 @@ function Account({ address }) {
     };
 
     const getLensPublications = async (request) => {
-      const userStruct = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${web3[0]}`);
-      const result = await getPublications({
-        profileId: userStruct.data.profileId,
-        publicationTypes: ["POST", "COMMENT", "MIRROR"],
-      });
-    
-      console.log(result.data);
+        const userStruct = await axios.get(
+            `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${web3[0]}`
+        );
+        const result = await getPublications({
+            profileId: userStruct.data.profileId,
+            publicationTypes: ['POST', 'COMMENT', 'MIRROR'],
+        });
+
+        console.log(result.data);
     };
 
-    const profile = async (request) => {
-      const userStruct = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${web3[0]}`);
-    
-      const result = await getProfile({
-        profileId: userStruct.data.profileId
-      })
-    
-      console.log(result.data);
-    };
-  
+    useEffect(() => {
+        const profile = async (request) => {
+            const userStruct = await axios.get(
+                `${process.env.REACT_APP_SERVER_URL}api/user/getUserData?address=${web3[0]}`
+            );
+            const result = await getProfile({
+                profileId: userStruct.data.name,
+            });
+            console.log(result.data);
+            await axios.put(`${process.env.REACT_APP_SERVER_URL}api/user/saveUserData`, {
+                address,
+                profileId: result.data.id,
+            });
+        };
+
+        if (web3[0] == address) {
+            profile();
+        }
+    }, []);
 
     return (
         <div className="form">
