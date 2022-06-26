@@ -3,135 +3,157 @@ import axios from 'axios';
 import { Button, Tabs, Input, Upload, message, Card, Col, Row } from 'antd';
 import Login from './Login.js';
 import WhiteBackground from '../components/WhiteBackground.js';
-import { navigate } from '@reach/router';
-import UserContext from "../UserContext";
+import UserContext from '../UserContext';
 
-
-import MapPicker from '../components/MapPicker';
-
-const { TextArea } = Input;
+function capitalize(str) {
+    return str[0].toUpperCase() + str.substring(1);
+}
 
 function Form() {
-  const {web3} = useContext(UserContext);
+    const { web3 } = useContext(UserContext);
 
-  const walletAddr = web3[0].slice(0,4) + '...' + web3[0].slice(-4,-1);
+    const walletAddr = web3[0].slice(0, 4) + '...' + web3[0].slice(-4, -1);
 
-  const [deedName, setDeedName] = useState('');
-  const [name, setName] = useState('Test Name');
-  const [address, setAddress] = useState('');
-  const [granteePhone, setGranteePhone] = useState('');
-  const [propertyDescription, setPropertyDescription] = useState('');
-  const [metamaskAddress, setMetamaskAddress] = useState('0x...');
-  const [toLogin, setToLogin] = useState(false);
-  const [points, setPoints] = useState([]);
-  const [reputationScore, setReputationScore] = useState(50);
-  const [githubUsername, setGithubUsername] = useState('@TestUsername');
+    const [name, setName] = useState('Test Name');
+    const [toLogin, setToLogin] = useState(false);
+    const [reputationScore, setReputationScore] = useState(50);
+    const [githubUsername, setGithubUsername] = useState('@TestUsername');
+    const [events, setEvents] = useState([]);
 
-  console.log(walletAddr);
+    useEffect(() => {
+        const fetchEvents = async () => {
+            console.log('fetching data');
+            const compound = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
+                params: { address: web3[0], protocol: 'compound' },
+            });
+            const dydx = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
+                params: { address: web3[0], protocol: 'dydx' },
+            });
 
-  function handleSubmit() {
-    console.log("beans")
-  }
+            setEvents([...compound.data.documents, ...dydx.data.documents]);
+        };
 
-  return (
-    <>
-      {' '}
-      {toLogin === true ? (
-        <Login />
-      ) : (
-        <div className="form">
-          <div style={{ fontSize: '40px', fontWeight: '700' }}>
-            My Profile
-          </div>
-          <div className="contents-align">
-            <div className="form-display">
-              <div
-                style={{
-                  position: 'absolute',
-                  zIndex: '-1',
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  width: '50vw'
-                }}
-              >
-                <WhiteBackground />
-              </div>
-              <div
-                style={{
-                  zIndex: '1',
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  height: '100%',
-                  padding: '0 5vw 0 5vw',
-                  marginTop: '20vh',
-                  width: '30vw'
-                }}
-              >
-                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
-                <Input
-                  style={{ borderRadius: '1vw', size: 'small' }}
-                  onChange={(event) => setName(event.target.value)}
-                  defaultValue={name}
-                />
+        const fetchUser = async () => {
+            await axios.post(`${process.env.REACT_APP_SERVER_URL}api/user/updateCompoundCredit`, {
+                address: web3[0],
+            });
 
-                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Wallet Address</div>
-                <h3>{walletAddr}</h3>
+            const { data } = await axios.get(
+                `${process.env.REACT_APP_SERVER_URL}api/user/getUserData`,
+                {
+                    params: { address: web3[0] },
+                }
+            );
 
-                <div style={{ fontSize: '15px', marginTop: '2vh' }}>GitHub Username</div>
-                <h3>{githubUsername}</h3>
+            setReputationScore(data.user.score);
+            setName(data.user.name);
+            setGithubUsername(data.user.github);
+        };
 
-                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Reputation Score</div>
-                <h2>{reputationScore}/100</h2>
+        fetchEvents();
+        fetchUser();
+    }, [web3]);
 
-                <Button
-            variant="primary"
-            type="submit"
-            onClick={handleSubmit}
-            className="button button--secondary"
-          >
-            SAVE
-          </Button>
+    console.log(walletAddr);
 
+    function handleSubmit() {
+        console.log('beans');
+    }
 
-              </div>
-            </div>
-          </div>
-          <div style={{ fontSize: '20px', marginBottom: '2vh', fontWeight: '700' }}>
-            Activity
-          </div>
+    return (
+        <>
+            {' '}
+            {toLogin === true ? (
+                <Login />
+            ) : (
+                <div className="form">
+                    <div style={{ fontSize: '40px', fontWeight: '700' }}>My Profile</div>
+                    <div className="contents-align">
+                        <div className="form-display">
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    zIndex: '-1',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    flexDirection: 'column',
+                                    width: '50vw',
+                                }}
+                            >
+                                <WhiteBackground />
+                            </div>
+                            <div
+                                style={{
+                                    zIndex: '1',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    flexDirection: 'column',
+                                    height: '100%',
+                                    padding: '0 5vw 0 5vw',
+                                    marginTop: '20vh',
+                                    width: '30vw',
+                                }}
+                            >
+                                <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
+                                <Input
+                                    style={{ borderRadius: '1vw', size: 'small' }}
+                                    onChange={(event) => setName(event.target.value)}
+                                    defaultValue={name}
+                                />
 
+                                <div style={{ fontSize: '15px', marginTop: '2vh' }}>
+                                    Wallet Address
+                                </div>
+                                <h3>{walletAddr}</h3>
 
-          <div className="site-card-wrapper">
-    <Row gutter={16}>
-      <Col span={8}>
-        <Card title="Propose" bordered={false}>
-          <p>Compound</p>
-          <p>Reputation Points: 10</p>
-        </Card>
-      </Col>
-      <Col span={8}>
-        <Card title="Vote" bordered={false}>
-        <p>dYdX</p>
-          <p>Reputation Points: 1</p>
+                                <div style={{ fontSize: '15px', marginTop: '2vh' }}>
+                                    GitHub Username
+                                </div>
+                                <h3>{githubUsername}</h3>
 
-        </Card>
-      </Col>
-      <Col span={8}>
-        <Card title="Write Article" bordered={false}>
-        <p>TribeDAO</p>
-          <p>Reputation Points: 12</p>
-        </Card>
-      </Col>
-    </Row>
-  </div>
-    <br />
+                                <div style={{ fontSize: '15px', marginTop: '2vh' }}>
+                                    Reputation Score
+                                </div>
+                                <h2>{reputationScore}/1000</h2>
 
-        </div>
-      )}
-    </>
-  );
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    onClick={handleSubmit}
+                                    className="button button--secondary"
+                                >
+                                    SAVE
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{ fontSize: '20px', marginBottom: '2vh', fontWeight: '700' }}>
+                        Activity
+                    </div>
+
+                    <div
+                        className="site-card-wrapper"
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            flexWrap: 'wrap',
+                            width: '70vw',
+                            backgroundColor: '#FFDDFF',
+                        }}
+                    >
+                        {events.map((event) => (
+                            <Card title={capitalize(event.type)} bordered={false}>
+                                <p>{capitalize(event.protocol)}</p>
+                                <p>Reputation Points: {event.magnitude}</p>
+                            </Card>
+                        ))}
+                    </div>
+                    <br />
+                </div>
+            )}
+        </>
+    );
 }
 
 export default Form;
