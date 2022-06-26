@@ -14,7 +14,7 @@ const { TextArea } = Input;
 function Form() {
   const {web3} = useContext(UserContext);
 
-  const walletAddr = web3[0].slice(0,4) + '...' + web3[0].slice(-4,-1);
+  const walletAddr = web3[0].slice(0,4) + '...' + web3[0].slice(-4);
 
   const [deedName, setDeedName] = useState('');
   const [name, setName] = useState('Test Name');
