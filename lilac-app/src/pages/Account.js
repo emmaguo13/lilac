@@ -165,7 +165,7 @@ function Account({ address }) {
                         }}
                     >
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Name</div>
-                        {address == web3[0] ? (
+                        {address == web3[[0]] ? (
                             <Input
                                 style={{ borderRadius: '1vw', size: 'small' }}
                                 onChange={(event) => setName(event.target.value)}
@@ -174,13 +174,12 @@ function Account({ address }) {
                         ) : (
                             <h3>{name}</h3>
                         )}
-                        <h6> {verified ? 'Verified' : 'Not Verified'} </h6>
 
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Wallet Address</div>
                         <h3>{walletAddr}</h3>
 
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>GitHub Username</div>
-                        {address == web3[0] ? (
+                        {address == web3[[0]] ? (
                             <Input
                                 style={{ borderRadius: '1vw', size: 'small' }}
                                 onChange={(event) => setGithubUsername(event.target.value)}
@@ -193,24 +192,21 @@ function Account({ address }) {
                         <div style={{ fontSize: '15px', marginTop: '2vh' }}>Reputation Score</div>
                         <h2>{reputationScore}/1000</h2>
 
-                        {address == web3[0] ? (
-                            <Button
-                                variant="primary"
-                                type="submit"
-                                onClick={handleSubmit}
-                                className="button button--secondary"
-                            >
-                                Save
-                            </Button>
-                        ) : null}
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            onClick={handleSubmit}
+                            className="button button--secondary"
+                        >
+                            SAVE
+                        </Button>
                     </div>
                 </div>
             </div>
-            <div style={{ fontSize: '20px', margin: '3vh 0vh 0vh 0vh', fontWeight: '700' }}>
-                Activity
-            </div>
+            <div style={{ fontSize: '20px', marginBottom: '0vh', fontWeight: '700' }}>Activity</div>
 
             <div
+                className="site-card-wrapper"
                 style={{
                     display: 'flex',
                     flexDirection: 'row',
@@ -221,38 +217,33 @@ function Account({ address }) {
                 }}
             >
                 {events.map((event) => (
-                    <Card
-                        title={capitalize(event.type)}
-                        bordered={false}
-                        style={{ margin: '10px', height: '200px' }}
-                    >
+                    <Card title={capitalize(event.type)} bordered={false}>
                         <p>{capitalize(event.protocol)}</p>
                         <p>Reputation Points: {event.magnitude}</p>
                     </Card>
                 ))}
             </div>
 
-            {address == web3[[0]] ? (
-                <Button
-                    className="button button--secondary"
-                    variant="primary"
-                    type="submit"
-                    onClick={() =>
-                        window.location.replace(
-                            `https://id.worldcoin.org/use?action_id=${address}&signal=0x0000000000000000000000000000000000000000&return_to=${encodeURIComponent(
-                                `${process.env.REACT_APP_CLIENT_URL}worldcoin/${address}`
-                            )}`
-                        )
-                    }
-                >
-                    {verified ? 'Already Verified!' : 'Verify with WorldID'}
-                </Button>
-            ) : null}
-
-            <div style={{ fontSize: '15px', marginTop: '2vh' }}>
-                Claimed? {claimed ? '👍' : '👎'}
-            </div>
-            <Button className="button button--secondary" onClick={handleRewards}>
+            <div style={{ fontSize: '15px', marginTop: '2vh' }}>Claimed? {claimed ? "👍" : "👎"}</div>
+            <Button
+                className="button button--secondary"
+                onClick={() =>
+                    window.location.replace(
+                        `https://id.worldcoin.org/use?action_id=${address}&signal=0x0000000000000000000000000000000000000000&return_to=${encodeURIComponent(
+                            `${process.env.REACT_APP_CLIENT_URL}worldcoin/${address}`
+                        )}`
+                    )
+                }
+            >
+                {' '}
+                Verify with WorldID{' '}
+            </Button>
+            <Button
+                className="button button--secondary"
+                onClick={ 
+                    handleRewards
+                }
+            >
                 Claim Rewards
             </Button>
 
@@ -260,5 +251,6 @@ function Account({ address }) {
         </div>
     );
 }
+
 
 export default Account;
