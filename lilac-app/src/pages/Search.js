@@ -6,16 +6,6 @@ import { navigate } from '@reach/router';
 
 const { Search } = Input;
 
-function capitalize(str) {
-    if (str === 'dydx') {
-        return 'dYdX';
-    }
-    if (str.length === 0) {
-        return '';
-    }
-    return str[0].toUpperCase() + str.substring(1);
-}
-
 const suffix = (
     <AudioOutlined
         style={{

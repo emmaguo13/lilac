@@ -7,6 +7,12 @@ import { getPublications } from '../tools/get-pubs';
 import { getProfile } from '../tools/get-profile';
 
 function capitalize(str) {
+    if (str === 'dydx') {
+        return 'dYdX';
+    }
+    if (str.length === 0) {
+        return '';
+    }
     return str[0].toUpperCase() + str.substring(1);
 }
 
@@ -27,7 +33,7 @@ function Account({ address }) {
             console.log('fetching data');
             const compound = await axios.get(`${process.env.REACT_APP_SERVER_URL}api/data/`, {
                 params: {
-                    address: '0x8169522c2c57883e8ef80c498aab7820da539806',
+                    address,
                     protocol: 'compound',
                 },
             });
@@ -168,7 +174,7 @@ function Account({ address }) {
                             onClick={handleSubmit}
                             className="button button--secondary"
                         >
-                            SAVE
+                            Save
                         </Button>
                     </div>
                 </div>
@@ -183,28 +189,38 @@ function Account({ address }) {
                     justifyContent: 'space-around',
                     flexWrap: 'wrap',
                     width: '70vw',
+                    height: '100%',
                     // backgroundColor: '#FFDDFF',
                 }}
             >
                 {events.map((event) => (
-                    <Card title={capitalize(event.type)} bordered={false}>
+                    <Card
+                        title={capitalize(event.type)}
+                        bordered={false}
+                        style={{ margin: '10px' }}
+                    >
                         <p>{capitalize(event.protocol)}</p>
                         <p>Reputation Points: {event.magnitude}</p>
                     </Card>
                 ))}
             </div>
-            <Button
-                onClick={() =>
-                    window.location.replace(
-                        `https://id.worldcoin.org/use?action_id=${address}&signal=0x0000000000000000000000000000000000000000&return_to=${encodeURIComponent(
-                            `${process.env.REACT_APP_CLIENT_URL}worldcoin/${address}`
-                        )}`
-                    )
-                }
-            >
-                {' '}
-                Verify with WorldID{' '}
-            </Button>
+            {address == web3[[0]] ? (
+                <Button
+                    className="button button--secondary"
+                    variant="primary"
+                    type="submit"
+                    onClick={() =>
+                        window.location.replace(
+                            `https://id.worldcoin.org/use?action_id=${address}&signal=0x0000000000000000000000000000000000000000&return_to=${encodeURIComponent(
+                                `${process.env.REACT_APP_CLIENT_URL}worldcoin/${address}`
+                            )}`
+                        )
+                    }
+                >
+                    {' '}
+                    Verify with WorldID{' '}
+                </Button>
+            ) : null}
             <br />
         </div>
     );
