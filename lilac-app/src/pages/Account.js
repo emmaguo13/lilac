@@ -16,7 +16,7 @@ function Form() {
 
     const [name, setName] = useState('Test Name');
     const [toLogin, setToLogin] = useState(false);
-    const [reputationScore, setReputationScore] = useState(50);
+    const [reputationScore, setReputationScore] = useState(500);
     const [githubUsername, setGithubUsername] = useState('@TestUsername');
     const [events, setEvents] = useState([]);
     const [ens, setEns] = useState('');
