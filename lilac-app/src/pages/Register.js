@@ -90,7 +90,8 @@ function Register({ address }) {
                     marginBottom: '390px',
                 }}
             >
-                <h1 style={{ fontWeight: '700', fontSize: '60px' }}>Register</h1>
+                <h1 style={{ fontWeight: '700', fontSize: '60px', marginBottom: '20vh' }}>Register</h1>
+                <br />
             </div>
 
             <div
@@ -115,6 +116,7 @@ function Register({ address }) {
 
                     <div style={{ fontSize: '15px', marginTop: '2vh' }}>Public Address</div>
                     <Input
+                    defaultValue={account}
                         style={{ borderRadius: '1vw' }}
                         onChange={(event) => setPublicAddress(event.target.value)}
                     />
