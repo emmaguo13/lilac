@@ -1,16 +1,17 @@
 #logo {
   position:absolute;
-  left:150px;
+  left:8.6em;
   height:60px;
   vertical-align:top;
-  background-color: #004a45;
+  // background-color: #004a45;
   overflow:hidden;
 }
 .logo-item{
   position: absolute;
   top: 2px;
-  left:-125px;
+  left:-7.5em;
   size: 150%;
+  font-size: 20;
 }
 .nav-item {
   position: relative;
@@ -19,7 +20,7 @@
 header {
   display: flex;
   justify-content: center;
-  background-color: #004a45;
+  // background-color: #004a45;
   nav {
     height: 4rem;
     width: 100%;
@@ -33,7 +34,7 @@ header {
       right:10px;
       height:65px;
       flex: 1;
-      color: #f0fff5;
+      color: black;
     }
 
     a {
@@ -42,7 +43,7 @@ header {
 
       &.nav-item--active {
         font-weight: 500;
-        color: #f0fff5;
+        color: black;
       }
 
       &:hover {
