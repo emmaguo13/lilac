@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, Link, Input } from 'antd';
+import { Button } from 'antd';
 import Web3 from 'web3';
-import axios from 'axios';
-import Register from './Register.js';
 import LoginBack from '../components/LoginBack.js';
-import Form from './Account.js';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import { navigate } from '@reach/router';
 import UserContext from '../UserContext';
 
 // import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
@@ -13,41 +11,13 @@ import UserContext from '../UserContext';
 function Login(props) {
     const { web3, setWeb3 } = useContext(UserContext);
 
-    const [name, setName] = useState('');
-    const [address, setAddress] = useState('');
-    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(true);
-    const [goToReg, setGoToReg] = useState(false);
-    const [typingPatt, setTypingPattern] = useState('');
-    const [authState, setAuthState] = useState(false);
-    const [isNotary, setIsNotary] = useState(false);
 
     useEffect(() => {
-        setAuthState(false);
-    }, []);
-
-    function handleIsNotary(isNotary, role) {
-        console.log('checking if it is regulator');
-        if (role == 'Official') {
-            setIsNotary({ role });
-            console.log(authState);
+        if (web3[0]) {
+            navigate(`/account/${web3[0]}`);
         }
-    }
-
-    function handleLoggedIn(auth) {
-        console.log('handleLoggedIn');
-        setAuthState({ auth });
-        console.log('handleGoToReg');
-        setGoToReg({ goToReg });
-    }
-
-    function handleAuthenticate(publicAddress, signature) {
-        console.log('Handling auth');
-        if (goToReg) {
-            console.log('going to registration');
-        } else {
-        }
-    }
+    }, [web3]);
 
     async function handleMetamaskLogin() {
         console.log('handling login');
@@ -85,14 +55,7 @@ function Login(props) {
         console.log(publicAddress);
         setLoading(true);
         console.log(process.env.REACT_APP_SERVER_URL);
-        // window.alert('Typing pattern matched.')
-        try {
-            //console.log(onLoggedIn)
-            await handleLoggedIn(authState);
-        } catch (err) {
-            await setLoading(false);
-            console.log(err);
-        }
+        // idk wtf is going on
     }
 
     async function handleWCLogin() {
@@ -105,110 +68,69 @@ function Login(props) {
         return new Web3(provider);
     }
 
-    async function initialValidation() {
-        return name.length > 0 && address.length > 0 && password.length > 0;
-    }
-
-    async function handleSignMessage(publicAddress, nonce) {
-        console.log(goToReg);
-        console.log(publicAddress);
-        console.log(nonce);
-        if (goToReg || !publicAddress || !nonce) {
-            console.log('going to registration');
-        } else {
-            try {
-                console.log(publicAddress);
-                console.log(nonce);
-                const signature = await web3.eth.personal.sign(
-                    `I am signing my one-time nonce: ${nonce}`,
-                    publicAddress,
-                    '' // MetaMask will ignore the password argument here
-                );
-                console.log(publicAddress);
-                console.log(signature);
-                return { publicAddress, signature };
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    }
-
-    function handleSignUp(publicAddress) {
-        console.log('beans');
-    }
-
-    //change the UI
     return (
-        <>
-            {goToReg === true ? (
-                <Register />
-            ) : authState ? (
-                <Form />
-            ) : (
-                <div
+        <div
+            style={{
+                width: '100vw',
+                height: '100vh',
+                position: 'absolute',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            <div
+                style={{
+                    position: 'absolute',
+                    zIndex: '0',
+                }}
+            >
+                <LoginBack />
+            </div>
+
+            <div
+                className="LogIn"
+                style={{
+                    display: 'flex',
+                    zIndex: '1',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    marginTop: '15vh',
+                }}
+            >
+                <h1
                     style={{
-                        width: '100vw',
-                        height: '100vh',
-                        position: 'absolute',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        fontWeight: '700',
                     }}
                 >
-                    <div
-                        style={{
-                            position: 'absolute',
-                            zIndex: '0',
-                        }}
-                    >
-                        <LoginBack />
-                    </div>
+                    Connect your wallet.
+                </h1>
 
-                    <div
-                        className="LogIn"
-                        style={{
-                            display: 'flex',
-                            zIndex: '1',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                            marginTop: '15vh',
-                        }}
-                    >
-                        <h1
-                            style={{
-                                fontWeight: '700',
-                            }}
-                        >
-                            Connect your wallet.
-                        </h1>
-
-                        <Button
-                            className="button button--secondary"
-                            variant="primary"
-                            type="submit"
-                            onClick={handleMetamaskLogin}
-                            style={{
-                                marginTop: '3vh',
-                            }}
-                        >
-                            Connect with Metamask
-                        </Button>
-                        <Button
-                            className="button button--secondary"
-                            variant="primary"
-                            type="submit"
-                            onClick={handleWCLogin}
-                            style={{
-                                marginTop: '3vh',
-                            }}
-                        >
-                            Connect with WalletConnect
-                        </Button>
-                    </div>
-                </div>
-            )}{' '}
-        </>
+                <Button
+                    className="button button--secondary"
+                    variant="primary"
+                    type="submit"
+                    onClick={handleMetamaskLogin}
+                    style={{
+                        marginTop: '3vh',
+                    }}
+                >
+                    Connect with Metamask
+                </Button>
+                <Button
+                    className="button button--secondary"
+                    variant="primary"
+                    type="submit"
+                    onClick={handleWCLogin}
+                    style={{
+                        marginTop: '3vh',
+                    }}
+                >
+                    Connect with WalletConnect
+                </Button>
+            </div>
+        </div>
     );
 }
 
