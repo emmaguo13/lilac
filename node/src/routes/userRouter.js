@@ -25,6 +25,37 @@ router.get('/getUserData', async (req, res) => {
     return res.status(200).json({ success: true, user });
 });
 
+router.get('/searchUserData', async (req, res) => {
+    let { name, ens } = req.query;
+
+    if (!name && !ens) {
+        return res.status(400).json({
+            name: 'need to have something lol',
+        });
+    }
+
+    if (!name) {
+        name = 'abcdefgaphweoickmewpoanbupaowimcl;kdsknbpoawmcds;kldmschijklmnop';
+    }
+    if (!ens) {
+        ens = 'abcdefgaphweoickmewpoanbupaowimcl;kdsknbpoawmcds;kldmschijklmnop';
+    }
+
+    let users = {};
+    try {
+        users = await User.find({
+            $or: [
+                { name: { $regex: name, $options: 'i' } },
+                { ens: { $regex: ens, $options: 'i' } },
+            ],
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).send(e);
+    }
+    return res.status(200).json({ success: true, users });
+});
+
 router.put('/saveUserData', async (req, res) => {
     const { address, name, ens, github, twitter, profileId, verified } = req.body;
     let user = [];

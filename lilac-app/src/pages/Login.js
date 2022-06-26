@@ -201,33 +201,42 @@ function Login(props) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'column',
-                    marginTop: '15vh',
                 }}
             >
                 <h1
                     style={{
                         fontWeight: '700',
+                        margin: '10vh 0vh 4vh 0vh',
                     }}
                 >
                     Sign in with your wallet
                 </h1>
-
-                <Button
-                    className="button button--secondary"
-                    variant="primary"
-                    type="submit"
-                    onClick={handleLogin}
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-around',
+                        alignItems: 'center',
+                    }}
                 >
-                    Continue
-                </Button>
-                <Button
-                    className="button button--secondary"
-                    variant="primary"
-                    type="submit"
-                    onClick={handleWCLogin}
-                >
-                    WalletConnect
-                </Button>
+                    <Button
+                        className="button button--secondary"
+                        variant="primary"
+                        type="submit"
+                        onClick={handleLogin}
+                        style={{ marginRight: '7vw' }}
+                    >
+                        MetaMask
+                    </Button>
+                    <Button
+                        className="button button--secondary"
+                        variant="primary"
+                        type="submit"
+                        onClick={handleWCLogin}
+                    >
+                        WalletConnect
+                    </Button>
+                </div>
             </div>
         </div>
     );
