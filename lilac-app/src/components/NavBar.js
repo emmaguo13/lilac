@@ -36,6 +36,7 @@ const Navbar = () => {
 
         {/* <MenuItem to="/form">Form</MenuItem> */}
         <MenuItem to="/login">Login</MenuItem>
+        <MenuItem to="/search">Search</MenuItem>
       </nav>
     </header>
   );
